@@ -11,7 +11,7 @@ stages:
 build app:
   stage: build-app
 
-  image: "node:latest"
+  image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/node:latest"
 
   script:
   - apk add alpine-sdk libtool autoconf build-base automake python3
@@ -37,7 +37,7 @@ build image:
     paths:
     - ".blitz/"
 
-  image: "docker:latest"
+  image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:latest"
 
   services:
   - "docker:dind"
@@ -57,7 +57,7 @@ build image:
 
 
 deploy to production:
-  image: "alpine:latest"
+  image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/alpine:latest"
 
   stage: deploy
 
