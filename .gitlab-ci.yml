@@ -11,10 +11,10 @@ stages:
 build app:
   stage: build-app
 
-  image: "node:14.16.0-alpine3.10"
+  image: "node:latest"
 
   script:
-  - apk add alpine-sdk libtool autoconf build-base automake libsodium
+  - apk add alpine-sdk libtool autoconf build-base automake python3
   - yarn
   - yarn build
 
