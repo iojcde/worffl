@@ -3,4 +3,3 @@
 
 yarn tsc
 yarn run lint
-yarn run test
