@@ -1,0 +1,61 @@
+import { BlitzApiHandler, getSession } from "blitz"
+import axios from "axios"
+import base64url from "base64url"
+import db from "db"
+import { Role } from "types"
+const handler: BlitzApiHandler = async (request, response) => {
+  const session = await getSession(request, response)
+  const body = {
+    client_id: process.env.GITHUB_CLIENT_ID,
+    client_secret: process.env.GITHUB_CLIENT_SECRET,
+    code: request.query.code,
+  }
+
+  const opts = { headers: { accept: "application/json" } }
+  /* 
+        session.$create() */
+  const data = await axios
+    .post(`https://github.com/login/oauth/access_token`, body, opts)
+    .then((res) => res.data["access_token"])
+    .then((token) => {
+      return axios
+        .get("https://api.github.com/user", {
+          headers: { authorization: `token ${token}` },
+        })
+        .then((res) => res.data)
+    })
+  const profile = {
+    id: String(data.id),
+    nodeId: data.node_id,
+    displayName: data.name,
+    username: data.login,
+    profileUrl: data.html_url,
+    ...(data.email && { emails: [{ value: data.email }] }),
+    ...(data.avatar_url && { avatars: [{ value: data.avatar_url }] }),
+  }
+
+  const email = profile.emails && profile.emails[0]?.value
+  const photo = profile.avatars && profile.avatars[0]?.value
+
+  const user = await db.user.upsert({
+    where: { email },
+    create: {
+      email,
+      name: profile.displayName,
+      ghusername: profile.username,
+      picture: photo,
+    },
+    update: { email, picture: photo },
+  })
+
+  const publicData = {
+    userId: user.id,
+    role: "USER" as Role,
+    name: user.name,
+    source: "github",
+  }
+
+  session.$create(publicData)
+  response.end(JSON.stringify({ status: "ok" }))
+}
+export default handler

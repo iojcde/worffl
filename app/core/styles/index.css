@@ -4,3 +4,6 @@
 body {
   @apply transition !important;
 }
+.button {
+  @apply w-2 !important;
+}

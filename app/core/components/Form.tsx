@@ -1,27 +1,27 @@
-import { ReactNode, PropsWithoutRef } from "react"
+import { FC } from "react"
 import { Form as FinalForm, FormProps as FinalFormProps } from "react-final-form"
-import * as z from "zod"
+// import * as z from "zod"
 export { FORM_ERROR } from "final-form"
 
-export interface FormProps<S extends z.ZodType<any, any>>
-  extends Omit<PropsWithoutRef<JSX.IntrinsicElements["form"]>, "onSubmit"> {
-  /** All your form fields */
-  children?: ReactNode
-  /** Text to display in the submit button */
-  submitText?: string
-  schema?: S
-  onSubmit: FinalFormProps<z.infer<S>>["onSubmit"]
-  initialValues?: FinalFormProps<z.infer<S>>["initialValues"]
-}
+// export interface FormProps<S extends z.ZodType<any, any>>
+//   extends Omit<PropsWithoutRef<JSX.IntrinsicElements["form"]>, "onSubmit"> {
+//   /** All your form fields */
+//   children?: ReactNode
+//   /** Text to display in the submit button */
+//   submitText?: string
+//   schema?: S
+//   onSubmit: FinalFormProps<z.infer<S>>["onSubmit"]
+//   initialValues?: FinalFormProps<z.infer<S>>["initialValues"]
+// }
 
-export function Form<S extends z.ZodType<any, any>>({
+const Form: FC = ({
   children,
   submitText,
   schema,
   initialValues,
   onSubmit,
   ...props
-}: FormProps<S>) {
+}: FinalFormProps) => {
   return (
     <FinalForm
       initialValues={initialValues}

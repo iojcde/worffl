@@ -8,14 +8,14 @@ const Submenu: React.FC = () => {
   const [sticky, setSticky] = useState(false)
 
   useEffect(() => {
-    const scrollHandler = () => setSticky(document.documentElement.scrollTop > 54)
+    const scrollHandler = (): void => setSticky(document.documentElement.scrollTop > 54)
     document.addEventListener("scroll", scrollHandler)
     return () => document.removeEventListener("scroll", scrollHandler)
   }, [setSticky])
 
   return (
     <>
-      <nav className="sub-menu__wrapper">
+      <nav className="sub-menu__wrapper transition">
         <div className={`sub-menu ${sticky ? "sub-menu_sticky" : ""}`}>
           <div className="sub-menu__inner">
             <Tabs className="" value={router.asPath} onChange={(route) => router.push(route)}>

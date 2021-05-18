@@ -3,7 +3,11 @@ import { Document, Html, DocumentHead, Main, BlitzScript, DocumentContext } from
 import { CssBaseline } from "@geist-ui/react"
 
 class MyDocument extends Document {
-  static async getInitialProps(ctx: DocumentContext) {
+  static async getInitialProps(ctx: DocumentContext): Promise<{
+    styles: JSX.Element
+    html: string
+    head?: (JSX.Element | null)[] | undefined
+  }> {
     const initialProps = await Document.getInitialProps(ctx)
     const styles = CssBaseline.flush()
 
@@ -18,12 +22,13 @@ class MyDocument extends Document {
     }
   }
 
-  render() {
+  render(): JSX.Element {
     return (
-      <Html lang="kr">
+      <Html lang="kr" className="transition duration-200">
         <DocumentHead />
         <body>
           <script
+            async
             dangerouslySetInnerHTML={{
               __html: `
             (function(){
@@ -32,8 +37,8 @@ class MyDocument extends Document {
                 document.documentElement.style.background = '#000';
                 document.body.style.background = '#000';
               } else {
-                document.documentElement.style.background = '#fff';
-                document.body.style.background = '#fff';
+                document.documentElement.style.background = '#FAFAFA';
+                document.body.style.background = '#FAFAFA';
               }
             })()`,
             }}

@@ -12,14 +12,13 @@ import { GeistProvider, CssBaseline } from "@geist-ui/react"
 
 import { PrefersContext, themes, ThemeType } from "app/core/hooks/usePrefers"
 import { ErrorBoundary } from "react-error-boundary"
-import LoginForm from "app/auth/components/LoginForm"
-import Menu from "app/core/components/Nav"
+import Menu from "app/core/components/ProjectNav"
 import "app/core/styles/index.css"
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({ Component, pageProps }: AppProps): JSX.Element {
   const getLayout = Component.getLayout || ((page) => page)
   const router = useRouter()
 
-  const [themeType, setThemeType] = useState<ThemeType>("dark")
+  const [themeType, setThemeType] = useState<ThemeType>("light")
 
   useEffect(() => {
     document.documentElement.removeAttribute("style")
@@ -52,9 +51,10 @@ export default function App({ Component, pageProps }: AppProps) {
   )
 }
 
-function RootErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps) {
+function RootErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps): JSX.Element {
+  const router = useRouter()
   if (error instanceof AuthenticationError) {
-    return <LoginForm onSuccess={resetErrorBoundary} />
+    return <>{router.push("/api/auth/github")}</>
   } else if (error instanceof AuthorizationError) {
     return (
       <ErrorComponent

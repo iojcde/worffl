@@ -10,6 +10,8 @@ interface Prefers {
 
 export const PrefersContext = createContext<Prefers>({
   themeType: "dark",
+  // These are only the default ones
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   switchTheme: () => {},
 })
 
