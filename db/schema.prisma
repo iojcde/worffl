@@ -13,17 +13,31 @@ generator client {
 // --------------------------------------
 
 model User {
-  id             Int      @id @default(autoincrement())
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  name           String?
-  email          String   @unique
+  id             Int       @id @default(autoincrement())
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  name           String
+  ghusername     String?
+  ghuserid       Int?      @unique
+  email          String    @unique
   hashedPassword String?
-  role           String   @default("USER")
+  role           String    @default("USER")
+  picture        String?
+  tokens         Token[]
+  sessions       Session[]
+  projects       Project[]
+  Github_Repo    GhRepo[]
+}
 
-  tokens   Token[]
-  sessions Session[]
-  projects Project[]
+model GhRepo {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  url       String
+  ghrepoid  Int      @unique
+  owner     User     @relation(fields: [ownerId], references: [id])
+  ownerId   Int
+  private   Boolean
 }
 
 model Session {
