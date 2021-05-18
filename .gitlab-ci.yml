@@ -14,7 +14,7 @@ build app:
   image: "node:14.16.0-alpine3.10"
 
   script:
-  - apk add alpine-sdk
+  - apk add alpine-sdk libtool
   - yarn
   - yarn build
 
@@ -25,7 +25,7 @@ build app:
 
   artifacts:
     paths:
-    - ".next/"
+    - ".blitz/"
     expire_in: 1 day
 
 
