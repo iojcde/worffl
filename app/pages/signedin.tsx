@@ -1,8 +1,8 @@
-import { BlitzPage } from "blitz"
-import Layout from "app/core/layouts/Layout"
-import React, { Suspense } from "react"
-import { useCurrentUser } from "app/core/hooks/useCurrentUser"
-import { Loading } from "@geist-ui/react"
+import { BlitzPage } from 'blitz'
+import Layout from 'app/core/layouts/Layout'
+import React, { Suspense } from 'react'
+import { useCurrentUser } from 'app/core/hooks/useCurrentUser'
+import { Loading } from '@geist-ui/react'
 
 /*
  * This file is just for a pleasant getting started page for your new app.

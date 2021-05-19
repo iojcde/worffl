@@ -1,11 +1,11 @@
-import { FC, Suspense } from "react"
-import { useRouter } from "blitz"
-import { Avatar, Button, useTheme, Popover } from "@geist-ui/react"
-import * as Icons from "react-feather"
-import Submenu from "app/core/components/Submenu"
-import UserSettings from "app/core/components/UserSettings"
-import { usePrefers } from "app/core/hooks/usePrefers"
-import { useCurrentUser } from "../hooks/useCurrentUser"
+import { FC, Suspense } from 'react'
+import { useRouter } from 'blitz'
+import { Avatar, Button, useTheme, Popover } from '@geist-ui/react'
+import * as Icons from 'react-feather'
+import Submenu from 'app/core/components/Submenu'
+import UserSettings from 'app/core/components/UserSettings'
+import { usePrefers } from 'app/core/hooks/usePrefers'
+import { useCurrentUser } from '../hooks/useCurrentUser'
 
 const ProfilePicture: FC = () => {
   const user = useCurrentUser()
@@ -18,8 +18,8 @@ const UserName: FC = () => {
   const router = useRouter()
 
   if (user !== null && user.picture !== null)
-    return <span style={{ fontSize: "14px" }}>{user?.name}</span>
-  else router.push("/")
+    return <span style={{ fontSize: '14px' }}>{user?.name}</span>
+  else router.push('/')
   return <></>
 }
 const ProjectInfo: React.FC = () => {
@@ -41,7 +41,7 @@ const ProjectInfo: React.FC = () => {
       >
         <path d="M16.88 3.549L7.12 20.451"></path>
       </svg>
-      <span className="menu-nav__title" style={{ fontSize: "14px" }}>
+      <span className="menu-nav__title" style={{ fontSize: '14px' }}>
         Example Project
       </span>
     </div>
@@ -64,9 +64,9 @@ const Menu: React.FC = () => {
             className="theme-button"
             auto
             type="abort"
-            onClick={() => prefers.switchTheme(theme.type === "dark" ? "light" : "dark")}
+            onClick={() => prefers.switchTheme(theme.type === 'dark' ? 'light' : 'dark')}
           >
-            {theme.type === "dark" ? <Icons.Sun size={16} /> : <Icons.Moon size={16} />}
+            {theme.type === 'dark' ? <Icons.Sun size={16} /> : <Icons.Moon size={16} />}
           </Button>
           <Popover
             content={<UserSettings />}

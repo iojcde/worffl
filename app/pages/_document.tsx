@@ -1,6 +1,6 @@
-import React from "react"
-import { Document, Html, DocumentHead, Main, BlitzScript, DocumentContext } from "blitz"
-import { CssBaseline } from "@geist-ui/react"
+import React from 'react'
+import { Document, Html, DocumentHead, Main, BlitzScript, DocumentContext } from 'blitz'
+import { CssBaseline } from '@geist-ui/react'
 
 class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext): Promise<{

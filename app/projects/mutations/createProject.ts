@@ -1,7 +1,7 @@
-import { resolver } from "blitz"
-import db from "db"
-import * as z from "zod"
-import { Ctx } from "blitz"
+import { resolver } from 'blitz'
+import db from 'db'
+import * as z from 'zod'
+import { Ctx } from 'blitz'
 const CreateProject = z
   .object({
     name: z.string(),
@@ -19,5 +19,5 @@ export default resolver.pipe(
     ctx.session.$authorize()
     const project = await db.project.create({ data: { userId: ctx.session.userId, ...input } })
     return project
-  }
+  },
 )

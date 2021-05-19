@@ -1,6 +1,6 @@
-import { resolver } from "blitz"
-import db from "db"
-import * as z from "zod"
+import { resolver } from 'blitz'
+import db from 'db'
+import * as z from 'zod'
 const CreateProject = z
   .object({
     id: z.number(),
@@ -20,5 +20,5 @@ export default resolver.pipe(
       })[0].userID
     )
       return await db.project.deleteMany({ where: { id: id } })
-  }
+  },
 )

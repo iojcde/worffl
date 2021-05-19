@@ -1,7 +1,7 @@
-import { BlitzPage } from "blitz"
-import Layout from "app/core/layouts/Layout"
-import React, { Suspense } from "react"
-import { useCurrentUser } from "app/core/hooks/useCurrentUser"
+import { BlitzPage } from 'blitz'
+import Layout from 'app/core/layouts/Layout'
+import React, { Suspense } from 'react'
+import { useCurrentUser } from 'app/core/hooks/useCurrentUser'
 
 /*
  * This file is just for a pleasant getting started page for your new app.
@@ -15,9 +15,9 @@ const UserSection: React.FC = () => {
       <button
         onClick={() =>
           window.open(
-            "/api/auth/github",
-            "Sign up with GitHub",
-            "toolbar=no,location=no,menubar=no"
+            '/api/auth/github',
+            'Sign up with GitHub',
+            'toolbar=no,location=no,menubar=no',
           )
         }
       >
@@ -31,7 +31,7 @@ const UserSection: React.FC = () => {
 const Home: BlitzPage = () => {
   return (
     <Suspense fallback={<p>loading..</p>}>
-      <UserSection />{" "}
+      <UserSection />{' '}
     </Suspense>
   )
 }

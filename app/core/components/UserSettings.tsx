@@ -1,5 +1,5 @@
-import React from "react"
-import { Popover, Link } from "@geist-ui/react"
+import React from 'react'
+import { Popover, Link } from '@geist-ui/react'
 
 const UserSettings: React.FC = () => (
   <>

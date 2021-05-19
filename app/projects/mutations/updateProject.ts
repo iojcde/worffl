@@ -1,6 +1,6 @@
-import { resolver } from "blitz"
-import db from "db"
-import * as z from "zod"
+import { resolver } from 'blitz'
+import db from 'db'
+import * as z from 'zod'
 
 const UpdateProject = z
   .object({
@@ -17,5 +17,5 @@ export default resolver.pipe(
     const project = await db.project.update({ where: { id }, data })
 
     return project
-  }
+  },
 )

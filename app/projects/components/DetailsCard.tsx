@@ -1,4 +1,4 @@
-import { Card } from "@geist-ui/react"
+import { Card } from '@geist-ui/react'
 /* import { useEffect } from "react"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import { useState } from "react" */

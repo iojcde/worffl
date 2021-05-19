@@ -1,6 +1,6 @@
-import { createContext, useContext } from "react"
+import { createContext, useContext } from 'react'
 
-export const themes = ["light", "dark"] as const
+export const themes = ['light', 'dark'] as const
 export type ThemeType = typeof themes[number]
 
 interface Prefers {
@@ -9,7 +9,7 @@ interface Prefers {
 }
 
 export const PrefersContext = createContext<Prefers>({
-  themeType: "dark",
+  themeType: 'dark',
   // These are only the default ones
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   switchTheme: () => {},

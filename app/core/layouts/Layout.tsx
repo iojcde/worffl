@@ -1,6 +1,6 @@
-import { ReactNode } from "react"
-import { Head } from "blitz"
-import { useTheme } from "@geist-ui/react"
+import { ReactNode } from 'react'
+import { Head } from 'blitz'
+import { useTheme } from '@geist-ui/react'
 
 type LayoutProps = {
   title?: string
@@ -12,7 +12,7 @@ const Layout: React.FC<LayoutProps> = ({ title, children }) => {
   return (
     <div className=" w-screen min-h-screen">
       <Head>
-        <title>{title || "Sirius"}</title>
+        <title>{title || 'Sirius'}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className=" transition  main pt-12 mx-auto px-5 ">{children}</main>

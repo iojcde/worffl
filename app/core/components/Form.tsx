@@ -1,7 +1,7 @@
-import { FC } from "react"
-import { Form as FinalForm, FormProps as FinalFormProps } from "react-final-form"
+import { FC } from 'react'
+import { Form as FinalForm, FormProps as FinalFormProps } from 'react-final-form'
 // import * as z from "zod"
-export { FORM_ERROR } from "final-form"
+export { FORM_ERROR } from 'final-form'
 
 // export interface FormProps<S extends z.ZodType<any, any>>
 //   extends Omit<PropsWithoutRef<JSX.IntrinsicElements["form"]>, "onSubmit"> {
@@ -40,7 +40,7 @@ const Form: FC = ({
           {children}
 
           {submitError && (
-            <div role="alert" style={{ color: "red" }}>
+            <div role="alert" style={{ color: 'red' }}>
               {submitError}
             </div>
           )}

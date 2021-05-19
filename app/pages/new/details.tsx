@@ -1,6 +1,6 @@
-import { BlitzPage } from "blitz"
-import Layout from "app/core/layouts/Layout"
-import { Card, Text } from "@geist-ui/react"
+import { BlitzPage } from 'blitz'
+import Layout from 'app/core/layouts/Layout'
+import { Card, Text } from '@geist-ui/react'
 
 const EditNewProjectPage: BlitzPage = () => {
   return (
@@ -14,7 +14,7 @@ const EditNewProjectPage: BlitzPage = () => {
   )
 }
 
-EditNewProjectPage.authenticate = { redirectTo: "/login" }
-EditNewProjectPage.getLayout = (page) => <Layout title={"Create New Project"}>{page}</Layout>
+EditNewProjectPage.authenticate = { redirectTo: '/login' }
+EditNewProjectPage.getLayout = (page) => <Layout title={'Create New Project'}>{page}</Layout>
 
 export default EditNewProjectPage

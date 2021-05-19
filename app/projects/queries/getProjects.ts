@@ -1,7 +1,7 @@
-import { paginate, resolver } from "blitz"
-import db, { Prisma } from "db"
+import { paginate, resolver } from 'blitz'
+import db, { Prisma } from 'db'
 
-type GetProjectsInput = Pick<Prisma.ProjectFindManyArgs, "where" | "orderBy" | "skip" | "take">
+type GetProjectsInput = Pick<Prisma.ProjectFindManyArgs, 'where' | 'orderBy' | 'skip' | 'take'>
 
 export default resolver.pipe(
   resolver.authorize(),
@@ -25,5 +25,5 @@ export default resolver.pipe(
       hasMore,
       count,
     }
-  }
+  },
 )

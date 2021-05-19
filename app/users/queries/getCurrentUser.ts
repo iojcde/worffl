@@ -1,5 +1,5 @@
-import { Ctx } from "blitz"
-import db from "db"
+import { Ctx } from 'blitz'
+import db from 'db'
 export type getCurrentUserResult = {
   role: string
   id: number
@@ -9,7 +9,7 @@ export type getCurrentUserResult = {
 }
 export default async function getCurrentUser(
   _ = null,
-  { session }: Ctx
+  { session }: Ctx,
 ): Promise<getCurrentUserResult | null> {
   if (!session.userId) return null
 

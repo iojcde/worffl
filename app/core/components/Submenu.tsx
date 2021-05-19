@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react"
-import { useRouter } from "blitz"
-import { Tabs, useTheme } from "@geist-ui/react"
+import React, { useState, useEffect } from 'react'
+import { useRouter } from 'blitz'
+import { Tabs, useTheme } from '@geist-ui/react'
 
 const Submenu: React.FC = () => {
   const theme = useTheme()
@@ -9,14 +9,14 @@ const Submenu: React.FC = () => {
 
   useEffect(() => {
     const scrollHandler = (): void => setSticky(document.documentElement.scrollTop > 54)
-    document.addEventListener("scroll", scrollHandler)
-    return () => document.removeEventListener("scroll", scrollHandler)
+    document.addEventListener('scroll', scrollHandler)
+    return () => document.removeEventListener('scroll', scrollHandler)
   }, [setSticky])
 
   return (
     <>
       <nav className="sub-menu__wrapper transition">
-        <div className={`sub-menu ${sticky ? "sub-menu_sticky" : ""}`}>
+        <div className={`sub-menu ${sticky ? 'sub-menu_sticky' : ''}`}>
           <div className="sub-menu__inner">
             <Tabs className="" value={router.asPath} onChange={(route) => router.push(route)}>
               <Tabs.Item label="Overview" value="/" />

@@ -1,12 +1,12 @@
 // app/api/auth/[...auth].ts
-import { passportAuth } from "blitz"
-import db from "db"
-import { Strategy as GithubStrategy } from "passport-github2"
+import { passportAuth } from 'blitz'
+import db from 'db'
+import { Strategy as GithubStrategy } from 'passport-github2'
 
 export default passportAuth({
-  successRedirectUrl: "/signedin",
+  successRedirectUrl: '/signedin',
   secureProxy: true,
-  errorRedirectUrl: "/",
+  errorRedirectUrl: '/',
   strategies: [
     {
       strategy: new GithubStrategy(
@@ -36,10 +36,10 @@ export default passportAuth({
           const publicData = {
             userId: user.id,
             roles: [user.role],
-            source: "github",
+            source: 'github',
           }
           done(undefined, { publicData })
-        }
+        },
       ),
     },
   ],
