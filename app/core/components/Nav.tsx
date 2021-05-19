@@ -1,7 +1,6 @@
-import { Routes } from ".blitz"
-import { useTheme } from "@geist-ui/react"
-import Link from "next/link"
-import React from "react"
+import { useTheme } from '@geist-ui/react'
+import Link from 'next/link'
+import React from 'react'
 
 const Header: React.FC = () => {
   const theme = useTheme()
@@ -13,7 +12,7 @@ const Header: React.FC = () => {
           <Link href="/">
             <span className="text-3xl font-semibold cursor-pointer">Dply.app</span>
           </Link>
-          <Link href={Routes.NewProjectPage()}>Projects</Link>
+          <Link href="/projects">Projects</Link>
           <div className="md:flex items-center  hidden">
             <Link href="/api/auth/github">
               <span className="text-gray-700 cursor-pointer mr-5">Login</span>
