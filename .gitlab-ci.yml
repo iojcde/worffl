@@ -8,8 +8,13 @@ stages:
 - deploy
 
 
+
 build app:
+  
   stage: build-app
+
+  variables:
+    SKIP_GENERATE: "true"# prisma bug https://github.com/prisma/prisma/issues/5304
 
   image: ubuntu
 
@@ -20,6 +25,9 @@ build app:
    - npm i -g yarn 
    - rm -rf /root/.cache/prisma/
    - yarn --frozen-lockfile --production
+   - rm -rf /root/.cache/prisma
+   - yarn blitz prisma generate
+   - yarn build
 
   cache:
     paths:
