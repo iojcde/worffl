@@ -11,12 +11,14 @@ stages:
 build app:
   stage: build-app
 
-  image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/node:12-stretch"
+  image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/ubuntu"
 
   script:
-   - apt-get update && apt-get install openssl libsodium18 build-essential git python3 -y 
-   - npm install --force -g yarn node-gyp
-   - yarn install --frozen-lockfile
+   - apt-get update && apt-get install openssl  build-essential git python3 -y 
+   - curl -fsSL https://deb.nodesource.com/setup_14.x | sudo -E bash 
+   - sudo apt-get install -y nodejs
+   - npm i -g yarn
+   - yarn install --frozen-lockfile --production
    - yarn blitz prisma generate
    - yarn next telemetry disable && yarn build
 
