@@ -15,6 +15,7 @@ build app:
 
   script:
    - apt-get update && apt-get install openssl -y 
+   - npm install -g yarn
    - yarn install --frozen-lockfile
    - yarn blitz prisma generate
    - yarn next telemetry disable && yarn build
