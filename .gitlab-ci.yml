@@ -14,7 +14,7 @@ build app:
   image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/node:14-stretch-slim"
 
   script:
-   - apt-get update && apt-get install openssl libsodium build-essential git python3 -y 
+   - apt-get update && apt-get install openssl libsodium18 build-essential git python3 -y 
    - npm install --force -g yarn
    - yarn install --frozen-lockfile
    - yarn blitz prisma generate
