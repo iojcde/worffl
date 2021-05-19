@@ -11,7 +11,7 @@ stages:
 build app:
   stage: build-app
 
-  image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/node:12"
+  image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/node:14"
 
   script:
   - apt update
