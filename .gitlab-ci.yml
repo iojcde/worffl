@@ -16,7 +16,7 @@ build app:
   script:
   - apt update
   - apt install build-essential 
-  - yarn
+  - yarn --verbose
   - yarn build
 
   cache:
