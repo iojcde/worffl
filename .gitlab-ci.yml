@@ -11,12 +11,12 @@ stages:
 build app:
   stage: build-app
 
-  image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/ubuntu"
+  image: ubuntu
 
   script:
-   - apt-get update && apt-get install openssl build-essential git python3 curl sudo  -y 
-   - curl -fsSL https://deb.nodesource.com/setup_14.x | sudo -E bash 
-   - sudo apt-get install -y nodejs
+   - apt-get update && apt-get install openssl build-essential git python3 curl  -y 
+   - curl -fsSL https://deb.nodesource.com/setup_14.x |  bash 
+   -  apt-get install -y nodejs
    - npm i -g yarn
    - yarn install --frozen-lockfile --production
    - yarn blitz prisma generate
