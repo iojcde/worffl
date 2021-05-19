@@ -14,6 +14,7 @@ build app:
   image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/node:14-stretch-slim"
 
   script:
+   - apt-get update && apt-get install openssl -y 
    - yarn install --frozen-lockfile
    - yarn blitz prisma generate
    - yarn next telemetry disable && yarn build
