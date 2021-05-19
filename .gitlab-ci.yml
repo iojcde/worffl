@@ -11,12 +11,12 @@ stages:
 build app:
   stage: build-app
 
-  image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/node:14"
+  image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/node:alpine"
 
   script:
-  - apt update
-  - apt install build-essential 
-  - yarn --verbose
+  - apk --update add --no-cache curl git python alpine-sdk \
+  bash autoconf libtool automake
+  - yarn 
   - yarn build
 
   cache:
