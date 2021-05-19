@@ -17,9 +17,9 @@ build app:
    - apt-get update && apt-get install openssl build-essential git python3 curl  -y 
    - curl -fsSL https://deb.nodesource.com/setup_14.x |  bash 
    -  apt-get install -y nodejs
-   - npm i --production
-   - npm run blitz prisma generate
-   - npm run build
+   - npm i -g yarn 
+   - rm -rf /root/.cache/prisma/
+   - yarn --frozen-lockfile --production
 
   cache:
     paths:
