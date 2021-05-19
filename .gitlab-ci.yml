@@ -14,9 +14,9 @@ build app:
   image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/node:alpine"
 
   script:
-  - apk --update add --no-cache curl git python3 alpine-sdk bash autoconf libtool automake
-  - yarn 
-  - yarn build
+  - apk --update add --no-cache curl git python3 alpine-sdk bash autoconf libtool automake libc6-compat
+  - npm install
+  - npm run build
 
   cache:
     paths:
