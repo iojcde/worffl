@@ -12,5 +12,4 @@ COPY public /usr/src/app/public
 
 EXPOSE 5000
 
-
 CMD [ "yarn", "start", "-p", "5000" ]
