@@ -11,21 +11,23 @@ stages:
 build app:
   stage: build-app
 
-  image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/node:alpine"
+  image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/node:14-stretch-slim"
 
   script:
-  - apk --update add --no-cache curl git python3 alpine-sdk bash autoconf libtool automake libc6-compat
-  - npm install
-  - npm run build
+   - yarn install --frozen-lockfile
+   - yarn blitz prisma generate
+   - yarn next telemetry disable && yarn build
 
   cache:
     paths:
     - node_modules
     - ".blitz"
+    - ".next"
 
   artifacts:
     paths:
     - ".blitz/"
+    - ".next/"
     expire_in: 1 day
 
 
@@ -36,6 +38,7 @@ build image:
   artifacts:
     paths:
     - ".blitz/"
+    - ".next/"
 
   image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:latest"
 
