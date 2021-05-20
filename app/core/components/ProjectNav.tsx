@@ -7,9 +7,10 @@ import UserSettings from 'app/core/components/UserSettings'
 import { usePrefers } from 'app/core/hooks/usePrefers'
 import { useCurrentUser } from '../hooks/useCurrentUser'
 
-const ProfilePicture: FC = () => {
+const ProfilePicture: FC<{ className?: string }> = ({ className }) => {
   const user = useCurrentUser()
-  if (user !== null && user.picture !== null) return <Avatar src={user.picture} text="OA" />
+  if (user !== null && user.picture !== null)
+    return <Avatar className={className} src={user.picture} text="OA" />
   else return <Avatar text="OA" />
 }
 
@@ -18,7 +19,7 @@ const UserName: FC = () => {
   const router = useRouter()
 
   if (user !== null && user.picture !== null)
-    return <span style={{ fontSize: '14px' }}>{user?.name}</span>
+    return <span style={{ fontSize: '13px' }}>{user?.name}</span>
   else router.push('/')
   return <></>
 }
@@ -26,6 +27,7 @@ const ProjectInfo: React.FC = () => {
   const theme = useTheme()
   return (
     <div className="flex items-center">
+      <ProfilePicture className="mr-2" />
       <UserName />
       <svg
         viewBox="0 0 24 24"
@@ -96,7 +98,12 @@ const Menu: React.FC = () => {
           height: 54px;
           box-sizing: border-box;
         }
-
+        .menu-nav__title {
+          font-size: 1rem;
+          font-weight: 500;
+          margin: 0;
+          letter-spacing: 0;
+        }
         .menu-nav > div {
           display: flex;
           align-items: center;

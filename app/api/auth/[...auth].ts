@@ -26,7 +26,7 @@ export default passportAuth({
             create: {
               email,
               name: profile.displayName,
-              ghuserid: profile.id,
+              ghuserid: parseInt(profile.id),
               ghusername: profile.username,
               picture: photo,
             },

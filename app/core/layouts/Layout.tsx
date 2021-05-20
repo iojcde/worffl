@@ -15,7 +15,7 @@ const Layout: React.FC<LayoutProps> = ({ title, children }) => {
         <title>{title || 'Sirius'}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className=" transition  main pt-12 mx-auto px-5 ">{children}</main>
+      <main className=" transition  main pt-12 mx-auto  ">{children}</main>
       <style jsx>{`
         .main {
           width: ${theme.layout.pageWidthWithMargin};
