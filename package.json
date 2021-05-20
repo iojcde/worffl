@@ -37,6 +37,7 @@
     "blitz": "0.34.3",
     "dockerode": "3.3.0",
     "final-form": "4.20.2",
+    "http-proxy": "1.18.1",
     "inter-ui": "3.18.1",
     "octokit": "1.0.4",
     "passport-github2": "0.1.12",
