@@ -9,6 +9,7 @@ RUN apk --update add --no-cache curl git python alpine-sdk bash autoconf libtool
 ENV  SKIP_GENERATE=true
 RUN YARN_CACHE_FOLDER=/dev/shm/yarn_cache yarn --production
 RUN rm -rf /root/.cache/prisma
+COPY db/schema.prisma /usr/src/app
 RUN yarn blitz prisma generate
 
 COPY .next /usr/src/app/.next
