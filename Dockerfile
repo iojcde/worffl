@@ -1,20 +1,31 @@
-FROM node:14-alpine
+FROM node:alpine as builder
+RUN apk add --update --no-cache libc6-compat curl git python3 alpine-sdk bash autoconf libtool automake
+WORKDIR /app
 
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+COPY package.json /app
+COPY yarn.lock /app
 
-COPY package.json yarn.lock /usr/src/app/
-RUN apk --update add --no-cache curl git python alpine-sdk bash autoconf libtool automake
-# prisma bug https://github.com/prisma/prisma/issues/5304
-ENV  SKIP_GENERATE=true
-RUN YARN_CACHE_FOLDER=/dev/shm/yarn_cache yarn --production
+# install production dependencies  
+RUN yarn install --pure-lockfile --production
+# Save production depenencies installed so we can later copy them in the production image
+RUN cp -R node_modules /tmp/node_modules
+ENV NODE_ENV production
+COPY . .
 RUN rm -rf /root/.cache/prisma
 RUN yarn blitz prisma generate
+RUN yarn build
 
-COPY .next /usr/src/app/.next
-COPY .blitz /usr/src/app/.blitz
-COPY public /usr/src/app/public
 
+FROM node:slim
+WORKDIR /app
+
+COPY --from=builder /app /tmp/app
+RUN rsync -a /tmp/app ./ --exclude node_modules
+COPY --from=builder /tmp/node_modules ./node_modules
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/.blitz ./.blitz
+COPY --from=builder /app/package.json ./
+RUN yarn blitz prisma generate
 EXPOSE 5000
 
 CMD [ "yarn", "start", "-p", "5000" ]
