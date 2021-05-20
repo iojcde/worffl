@@ -1,5 +1,4 @@
 import { FC, Suspense } from 'react'
-import { useRouter } from 'blitz'
 import { Avatar, Button, useTheme, Popover } from '@geist-ui/react'
 import * as Icons from 'react-feather'
 import Submenu from 'app/core/components/Submenu'
@@ -10,56 +9,58 @@ import { useCurrentUser } from '../hooks/useCurrentUser'
 const ProfilePicture: FC<{ className?: string }> = ({ className }) => {
   const user = useCurrentUser()
   if (user !== null && user.picture !== null)
-    return <Avatar className={className} src={user.picture} text="OA" />
-  else return <Avatar text="OA" />
+    return (
+      <Avatar style={{ width: '30px', height: '30px' }} className={className} src={user.picture} />
+    )
+  else return <Avatar style={{ width: '30px', height: '30px' }} />
 }
 
 const UserName: FC = () => {
   const user = useCurrentUser()
-  const router = useRouter()
-
-  if (user !== null && user.picture !== null)
-    return <span style={{ fontSize: '13px' }}>{user?.name}</span>
-  else router.push('/')
+  if (user !== null && user.name !== null)
+    return (
+      <span className="menu-nav__title" style={{ fontSize: '14px', fontWeight: 500 }}>
+        {user?.name}
+      </span>
+    )
   return <></>
 }
-const ProjectInfo: React.FC = () => {
-  const theme = useTheme()
-  return (
-    <div className="flex items-center">
-      <ProfilePicture className="mr-2" />
-      <UserName />
-      <svg
-        viewBox="0 0 24 24"
-        width="32"
-        height="32"
-        stroke="currentColor"
-        strokeWidth="1"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-        shapeRendering="geometricPrecision"
-        style={{ color: theme.palette.accents_2 }}
-      >
-        <path d="M16.88 3.549L7.12 20.451"></path>
-      </svg>
-      <span className="menu-nav__title" style={{ fontSize: '14px' }}>
-        Example Project
-      </span>
-    </div>
-  )
-}
 
-const Menu: React.FC = () => {
+const ProjectMenu: React.FC = () => {
   const theme = useTheme()
   const prefers = usePrefers()
 
   return (
     <>
-      <nav className="menu-nav transition">
-        <Suspense fallback={<p>he</p>}>
-          <ProjectInfo />
-        </Suspense>
+      <nav className="menu-nav pt-4 transition relative">
+        <div className="flex items-center">
+          <Suspense
+            fallback={
+              <>
+                <Avatar />
+              </>
+            }
+          >
+            <ProfilePicture className="mr-2" />
+            <UserName />
+          </Suspense>
+
+          <svg
+            viewBox="0 0 24 24"
+            width="32"
+            height="32"
+            stroke="currentColor"
+            strokeWidth="1"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            fill="none"
+            shapeRendering="geometricPrecision"
+            style={{ color: theme.palette.accents_2 }}
+          >
+            <path d="M16.88 3.549L7.12 20.451"></path>
+          </svg>
+          <span className="menu-nav__projectname">Example Project</span>
+        </div>
         <div>
           <Button
             aria-label="Toggle Dark mode"
@@ -71,6 +72,7 @@ const Menu: React.FC = () => {
             {theme.type === 'dark' ? <Icons.Sun size={16} /> : <Icons.Moon size={16} />}
           </Button>
           <Popover
+            className="mr-3"
             content={<UserSettings />}
             placement="bottomEnd"
             portalClassName="user-settings__popover"
@@ -92,14 +94,20 @@ const Menu: React.FC = () => {
           width: ${theme.layout.pageWidthWithMargin};
           max-width: 100%;
           margin: 0 auto;
-          padding: 0 ${theme.layout.pageMargin};
+          padding: 0 24px;
           background-color: ${theme.palette.background};
           font-size: 16px;
-          height: 54px;
+          height: 48px;
           box-sizing: border-box;
         }
         .menu-nav__title {
-          font-size: 1rem;
+          font - size: 14px;
+          font-weight: 500;
+          margin: 0;
+          letter-spacing: 0;
+        }
+        .menu-nav__projectname {
+          font - size: 13px;
           font-weight: 500;
           margin: 0;
           letter-spacing: 0;
@@ -133,4 +141,4 @@ const Menu: React.FC = () => {
   )
 }
 
-export default Menu
+export default ProjectMenu

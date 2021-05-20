@@ -52,7 +52,7 @@ const LoadingCard: React.FC = () => {
   )
 }
 
-NewProjectPage.authenticate = { redirectTo: '/login' }
+NewProjectPage.authenticate = { redirectTo: '/' }
 NewProjectPage.getLayout = (page) => <Layout title={'Create New Project'}>{page}</Layout>
 export { LoadingCard }
 export default NewProjectPage

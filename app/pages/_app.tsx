@@ -12,7 +12,6 @@ import { GeistProvider, CssBaseline } from '@geist-ui/react'
 
 import { PrefersContext, themes, ThemeType } from 'app/core/hooks/usePrefers'
 import { ErrorBoundary } from 'react-error-boundary'
-import Menu from 'app/core/components/ProjectNav'
 import 'app/core/styles/index.css'
 export default function App({ Component, pageProps }: AppProps): JSX.Element {
   const getLayout = Component.getLayout || ((page) => page)
@@ -43,7 +42,6 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
       <GeistProvider themeType={themeType}>
         <CssBaseline />
         <PrefersContext.Provider value={{ themeType, switchTheme }}>
-          <Menu />
           {getLayout(<Component {...pageProps} />)}
         </PrefersContext.Provider>
       </GeistProvider>

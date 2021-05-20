@@ -30,9 +30,14 @@ const UserSection: React.FC = () => {
 }
 const Home: BlitzPage = () => {
   return (
-    <Suspense fallback={<p>loading..</p>}>
-      <UserSection />{' '}
-    </Suspense>
+    <>
+      <Suspense fallback={<p>loading..</p>}>
+        <UserSection />{' '}
+      </Suspense>
+      {[...Array(30)].map((a) => {
+        return <p key={a}>filler</p>
+      })}
+    </>
   )
 }
 

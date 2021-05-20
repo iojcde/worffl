@@ -15,10 +15,10 @@ const Submenu: React.FC = () => {
 
   return (
     <>
-      <nav className="sub-menu__wrapper transition">
+      <nav className="sub-menu__wrapper transition shadow-sm ">
         <div className={`sub-menu ${sticky ? 'sub-menu_sticky' : ''}`}>
-          <div className="sub-menu__inner">
-            <Tabs className="" value={router.asPath} onChange={(route) => router.push(route)}>
+          <div className="sub-menu__inner bg-white">
+            <Tabs value={router.asPath} onChange={(route) => router.push(route)}>
               <Tabs.Item label="Overview" value="/" />
               <Tabs.Item label="Projects" value="/projects" />
               <Tabs.Item label="Integrations" value="/integrations" />
@@ -35,7 +35,6 @@ const Submenu: React.FC = () => {
           height: 48px;
           position: relative;
           overflow: hidden;
-          box-shadow: inset 0 -1px ${theme.palette.border};
         }
         .sub-menu_sticky {
           position: fixed;
