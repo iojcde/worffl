@@ -11,7 +11,6 @@ RUN YARN_CACHE_FOLDER=/dev/shm/yarn_cache yarn --production
 RUN rm -rf /root/.cache/prisma
 COPY ./db/schema.prisma ./db/schema.prisma
 RUN yarn blitz prisma generate
-RUN yarn build
 EXPOSE 5000
 
 CMD [ "yarn", "start", "-p", "5000" ]
