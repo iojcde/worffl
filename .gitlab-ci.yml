@@ -85,7 +85,7 @@ deploy to production:
     url: https://dply.jcde.xyz
 
   only:
-  - main
+  - master
 
 
 
