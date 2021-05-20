@@ -12,6 +12,7 @@ RUN cp -R node_modules /tmp/node_modules
 ENV NODE_ENV production
 COPY . .
 RUN rm -rf /root/.cache/prisma
+COPY db/schema.prisma /usr/src/app
 RUN yarn blitz prisma generate
 RUN yarn build
 
