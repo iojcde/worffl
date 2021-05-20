@@ -18,3 +18,4 @@ COPY public /usr/src/app/public
 EXPOSE 5000
 
 CMD [ "yarn", "start", "-p", "5000" ]
+HEALTHCHECK CMD curl -f http://localhost:5000/ || exit 1;
