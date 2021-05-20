@@ -8,6 +8,7 @@ RUN rm -rf /root/.cache/prisma
 COPY ./db/schema.prisma ./db/schema.prisma
 RUN ls
 RUN yarn blitz prisma generate
+RUn yarn build
 EXPOSE 5000
 
 CMD [ "yarn", "start", "-p", "5000" ]
