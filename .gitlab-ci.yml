@@ -56,7 +56,7 @@ build image:
   - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG || docker pull $CI_REGISTRY_IMAGE:main
     || true
   - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA --cache-from=$CI_REGISTRY_IMAGE:$CI_BUILD_REF_NAME
-    --cache-from=$CI_REGISTRY_IMAGE:main --shm-size 512M  .
+    --cache-from=$CI_REGISTRY_IMAGE:main --shm-size 1G  .
   - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
   - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
