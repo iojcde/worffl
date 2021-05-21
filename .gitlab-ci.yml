@@ -13,13 +13,11 @@ build app:
   stage: build-app
 
   variables:
-    SKIP_GENERATE: "true"# prisma bug https://github.com/prisma/prisma/issues/5304
     DEBUG: "prisma,prisma:*"
 
   script:
    - apk --update add --no-cache curl git python3 alpine-sdk bash autoconf libtool automake
-   - rm -rf /root/.cache
-   - yarn --frozen-lockfile --production
+   - export SKIP_GENERATE="true" yarn --frozen-lockfile --production
    - rm -rf /root/.cache/prisma
    - yarn blitz prisma generate
    - yarn build
