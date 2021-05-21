@@ -86,6 +86,7 @@ model Deployment {
   name       String
   production Boolean
   lang       String
+  logs       String[]
   domain     String
   git        String
   hash       String
