@@ -18,7 +18,6 @@ WORKDIR /usr/src/app
 
 RUN apt-get update && apt-get install curl git -y
 COPY package.json yarn.lock ./
-COPY ./.next ./.next
 COPY ./.blitz ./.blitz
 ENV SKIP_GENERATE="true"
 RUN YARN_CACHE_FOLDER=/dev/shm/yarn_cache yarn --production
