@@ -17,7 +17,8 @@ build app:
 
   script:
    - apk --update add --no-cache curl git python3 alpine-sdk bash autoconf libtool automake
-   - export SKIP_GENERATE="true" yarn --frozen-lockfile --production
+   - export SKIP_GENERATE="true"
+   - yarn --frozen-lockfile --production
    - rm -rf /root/.cache/prisma
    - yarn blitz prisma generate
    - yarn build
