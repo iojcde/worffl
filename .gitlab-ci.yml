@@ -14,6 +14,7 @@ build app:
 
   variables:
     SKIP_GENERATE: "true"# prisma bug https://github.com/prisma/prisma/issues/5304
+    DEBUG: "prisma,prisma:*"
 
   script:
    - apk --update add --no-cache curl git python3 alpine-sdk bash autoconf libtool automake
