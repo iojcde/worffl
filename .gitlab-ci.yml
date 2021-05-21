@@ -12,9 +12,6 @@ build app:
   image: node:14-alpine
   stage: build-app
 
-  variables:
-    DEBUG: "prisma,prisma:*"
-
   script:
    - apk --update add --no-cache curl git python3 alpine-sdk bash autoconf libtool automake
    - export SKIP_GENERATE="true"
@@ -33,7 +30,7 @@ build app:
     paths:
     - ".blitz/"
     - ".next/"
-    expire_in: 1 day
+    expire_in: 2 day
 
 
 
