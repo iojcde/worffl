@@ -1,4 +1,4 @@
-import { resolver } from 'blitz'
+import { resolver, Ctx } from 'blitz'
 import db from 'db'
 import * as z from 'zod'
 const CreateProject = z
@@ -10,7 +10,7 @@ const CreateProject = z
 export default resolver.pipe(
   resolver.zod(CreateProject),
   resolver.authorize(),
-  async ({ id, ctx }) => {
+  async ({ id }, ctx: Ctx) => {
     ctx.session.$authorize()
     if (
       ctx.session.userId ===
