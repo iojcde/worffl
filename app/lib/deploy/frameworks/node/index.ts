@@ -1,5 +1,6 @@
-import { Deployment, Project } from 'db'
+import { Deployment, Project, GhRepo } from 'db'
 import Docker from 'dockerode'
+import { Image } from 'types'
 
 const docker = new Docker()
 type runExecProps = {
@@ -31,42 +32,43 @@ const runExec = ({ container, cmd, workdir, history }: runExecProps): Promise<vo
             if (err || data === undefined) return
             if (!data.Running) resolve()
           })
-        }, 2000)
+        }, 1000)
       })
     })
   })
 }
 
 type deployNodeArgs = {
-  project: Project
-  Deployment: Deployment
+  project: Project & {
+    GhRepo: GhRepo | null
+  }
+  deployment: Deployment
+  image: Image
 }
 
 const deployNode = async (args: deployNodeArgs): Promise<void> => {
   const history = []
-  const repo = args.Deployment.git
+  const repo = args.project.GhRepo?.url
 
   const commands = args.project.commands
   const env = args['env']
-  const workdir = '/usr/src/app/' + repo.split('/').slice(-1)[0]
+  const workdir = '/usr/src/app/' + repo?.split('/').slice(-1)[0]
 
   docker.createContainer(
     {
-      Image: 'nodejs',
+      Image: args.image,
       Tty: true,
       Cmd: ['/bin/sh'],
-      name: `${args.project.name}_${args.Deployment.name}_${args.Deployment.id}`,
+      name: `${args.project.name}_${args.deployment.name}_${args.deployment.id}`,
       Env: env,
     },
     (err, container) => {
-      container?.start({}, (err, data) => {
+      container?.start({}, async (err, data) => {
         runExec({ container, cmd: 'git clone ' + repo, workdir: '/usr/src/app', history })
-          .then(() => runExec({ container, cmd: commands['install'], workdir, history }))
-          .then(() => runExec({ container, cmd: commands['build'], workdir, history }))
-          .then(() => {
-            runExec({ container, cmd: commands['start'], workdir, history })
-            console.log('finished')
-          })
+        await runExec({ container, cmd: commands['install'], workdir, history })
+        await runExec({ container, cmd: commands['build'], workdir, history })
+        await runExec({ container, cmd: commands['start'], workdir, history })
+        console.log('finished')
       })
     },
   )

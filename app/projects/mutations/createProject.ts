@@ -7,6 +7,8 @@ const CreateProject = z
     name: z.string(),
     commands: z.array(z.string()),
     domains: z.array(z.string()),
+    mainBranch: z.string(),
+    lang: z.string(),
     git: z.string(),
   })
   .nonstrict()

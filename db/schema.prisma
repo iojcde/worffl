@@ -85,11 +85,9 @@ model Deployment {
   updatedAt  DateTime @updatedAt
   name       String
   production Boolean
-  lang       String
   logs       String[]
   domain     String
-  git        String
-  hash       String
+  sha        String
   project    Project  @relation(fields: [projectId], references: [id])
   projectId  Int
 }
@@ -99,9 +97,11 @@ model Project {
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   name        String
+  lang        String
   commands    String[]
   user        User         @relation(fields: [userId], references: [id])
   userId      Int
   Deployments Deployment[]
   GhRepo      GhRepo?
+  mainBranch  String
 }
