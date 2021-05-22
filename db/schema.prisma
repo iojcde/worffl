@@ -7,8 +7,7 @@ datasource db {
 }
 
 generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native"]
+  provider = "prisma-client-js"
 }
 
 // --------------------------------------
@@ -19,28 +18,37 @@ model User {
   updatedAt      DateTime  @updatedAt
   name           String
   ghusername     String?
-  ghuserid       Int?      @unique
+  ghuserid       Int       @unique
   email          String    @unique
-  hashedPassword String?
-  role           String    @default("USER")
+  role           role      @default(USER)
   picture        String?
+  installationId Int?
   tokens         Token[]
   sessions       Session[]
   projects       Project[]
-  Github_Repo    GhRepo[]
+  ghRepos        GhRepo[]
+  Team           Team?     @relation(fields: [teamId], references: [id])
+  teamId         Int?
+}
+
+enum role {
+  USER
+  ADMIN
 }
 
 model GhRepo {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  url       String
-  ghrepoid  Int      @unique
-  owner     User     @relation(fields: [ownerId], references: [id])
-  projectId Int?
-  project   Project? @relation(fields: [projectId], references: [id])
-  ownerId   Int
-  private   Boolean
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  name        String
+  ghrepoid    Int      @unique
+  owner       User?    @relation(fields: [ownerId], references: [id])
+  ownerTeam   Team?    @relation(fields: [ownerTeamId], references: [id])
+  ownerTeamId Int?     @unique
+  projectId   Int?
+  project     Project? @relation(fields: [projectId], references: [id])
+  ownerId     Int?
+  private     Boolean
 }
 
 model Session {
@@ -93,15 +101,34 @@ model Deployment {
 }
 
 model Project {
+  ownerType   OwnerType
   id          Int          @id @default(autoincrement())
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   name        String
   lang        String
   commands    String[]
-  user        User         @relation(fields: [userId], references: [id])
-  userId      Int
+  user        User?        @relation(fields: [userId], references: [id])
+  team        Team?        @relation(fields: [teamId], references: [id])
+  teamId      Int?
+  userId      Int?
   Deployments Deployment[]
   GhRepo      GhRepo?
   mainBranch  String
+}
+
+enum OwnerType {
+  USER
+  TEAM
+}
+
+model Team {
+  id             Int       @id @default(autoincrement())
+  name           String    @unique
+  createdAt      DateTime  @default(now())
+  Members        User[]
+  ghOrgId        Int       @unique
+  installationId Int
+  Project        Project[]
+  GhRepo         GhRepo[]
 }

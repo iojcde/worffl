@@ -1,25 +1,23 @@
-import { resolver } from 'blitz'
-import db from 'db'
-import * as z from 'zod'
+import db, { OwnerType, Project } from 'db'
 import { Ctx } from 'blitz'
-const CreateProject = z
-  .object({
-    name: z.string(),
-    commands: z.array(z.string()),
-    domains: z.array(z.string()),
-    mainBranch: z.string(),
-    lang: z.string(),
-    git: z.string(),
+type CreateProject = {
+  name: string
+  commands: string[]
+  domains: string
+  ownerType: OwnerType
+  lang: string
+  mainBranch: string
+  ghRepoId: number
+}
+const createProject = async (input: CreateProject, ctx: Ctx): Promise<Project> => {
+  // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+  ctx.session.$authorize()
+  const project = await db.project.create({
+    data: {
+      GhRepo: { connect: { ghrepoid: input.ghRepoId } },
+      ...input,
+    },
   })
-  .nonstrict()
-
-export default resolver.pipe(
-  resolver.zod(CreateProject),
-  resolver.authorize(),
-  async (input, ctx: Ctx) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    ctx.session.$authorize()
-    const project = await db.project.create({ data: { userId: ctx.session.userId, ...input } })
-    return project
-  },
-)
+  return project
+}
+export default createProject

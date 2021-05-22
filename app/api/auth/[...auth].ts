@@ -32,7 +32,6 @@ export default passportAuth({
             },
             update: { email, picture: photo },
           })
-
           const publicData = {
             userId: user.id,
             roles: [user.role],

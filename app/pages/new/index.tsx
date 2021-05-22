@@ -1,10 +1,10 @@
-import { BlitzPage } from 'blitz'
-import { Card, Row, Button } from '@geist-ui/react'
-import { GitHub } from 'react-feather'
+import { BlitzPage, dynamic } from 'blitz'
+import { Card } from '@geist-ui/react'
+
 import Layout from 'app/core/layouts/Layout'
 import { Text, Loading } from '@geist-ui/react'
-import GitImportCard from 'app/projects/components/GitImportCard'
 import { Suspense } from 'react'
+const GitImportCard = dynamic(import('app/projects/components/GitImportCard'))
 
 const NewProjectPage: BlitzPage = () => {
   return (
@@ -15,16 +15,7 @@ const NewProjectPage: BlitzPage = () => {
       <div className=" shadow-xl mb-20 transition ">
         <Card style={{ height: '445px' }}>
           <h4>Import Git repository</h4>
-          <Suspense
-            fallback={
-              <>
-                <LoadingCard />
-                <LoadingCard />
-                <LoadingCard />
-                <LoadingCard />
-              </>
-            }
-          >
+          <Suspense fallback={<Loading />}>
             <GitImportCard />
           </Suspense>
         </Card>
@@ -32,27 +23,8 @@ const NewProjectPage: BlitzPage = () => {
     </>
   )
 }
-const LoadingCard: React.FC = () => {
-  return (
-    <Card style={{ marginBottom: '3px' }}>
-      <div className="flex items-center">
-        <GitHub className="mr-3 md:w-5 md:h-5" />
-
-        <span className="w-full">
-          <Row style={{ width: '80px' }}>
-            <Loading />
-          </Row>
-        </span>
-
-        <Button disabled className="min-w-max px-3" size="small" type="success">
-          Import
-        </Button>
-      </div>
-    </Card>
-  )
-}
 
 NewProjectPage.authenticate = { redirectTo: '/' }
 NewProjectPage.getLayout = (page) => <Layout title={'Create New Project'}>{page}</Layout>
-export { LoadingCard }
+
 export default NewProjectPage

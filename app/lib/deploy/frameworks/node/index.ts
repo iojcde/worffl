@@ -1,4 +1,6 @@
-import { Deployment, Project, GhRepo } from 'db'
+import { Deployment, Project, Team, User } from 'db'
+import { createAppAuth } from '@octokit/auth-app'
+import { config } from 'app/api/github/webhooks'
 import Docker from 'dockerode'
 import { Image } from 'types'
 
@@ -40,20 +42,43 @@ const runExec = ({ container, cmd, workdir, history }: runExecProps): Promise<vo
 
 type deployNodeArgs = {
   project: Project & {
-    GhRepo: GhRepo | null
+    GhRepo: {
+      ghrepoid: number
+      owner: User | null
+      ownerTeam: Team | null
+    } | null
   }
   deployment: Deployment
   image: Image
+  owner: Team | User
 }
 
 const deployNode = async (args: deployNodeArgs): Promise<void> => {
   const history = []
-  const repo = args.project.GhRepo?.url
 
   const commands = args.project.commands
   const env = args['env']
-  const workdir = '/usr/src/app/' + repo?.split('/').slice(-1)[0]
+  const repoData = await fetch(
+    `https://api.github.com/repositories/${args.project.GhRepo?.ghrepoid}`,
+  ).then((res) => res.json())
 
+  const repoFullName = repoData.full_name
+
+  const workdir = '/usr/src/app/'
+
+  const auth = createAppAuth({
+    appId: 95733,
+    installationId:
+      args.project.ownerType === 'TEAM'
+        ? (args.project.GhRepo?.ownerTeam?.installationId as number)
+        : (args.project.GhRepo?.owner?.installationId as number),
+    privateKey: config.privateKey,
+    clientId: config.clientID,
+    clientSecret: config.clientSecret,
+  })
+
+  const installationAuthentication = await auth({ type: 'installation' })
+  const repo = `https://x-access-token:${installationAuthentication['token']}@github.com/${repoFullName}`
   docker.createContainer(
     {
       Image: args.image,

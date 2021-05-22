@@ -1,17 +1,24 @@
 import { Button, Card, Input, Select } from '@geist-ui/react'
 import { GitHub, Plus, Search } from 'react-feather'
 import { useCurrentUser } from 'app/core/hooks/useCurrentUser'
-import { useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { Link } from 'blitz'
-import { LoadingCard } from 'app/pages/new/index'
 import base64url from 'base64url'
+import { getCurrentUserResult } from 'app/users/queries/getCurrentUser'
 
 const GitImportCard: React.FC = () => {
   // not implemented yet
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [data, setData] = useState({})
+  const [data, setData] = useState([])
   const user = useCurrentUser()
-  /*  const search = (e): void => { } */
+  const sleep = (ms: number): Promise<unknown> => {
+    return new Promise((resolve) => setTimeout(resolve, ms))
+  }
+  const search = async (e: ChangeEvent<HTMLInputElement>): Promise<void> => {
+    await sleep(1000)
+    const res = await fetch(`/api/github/search/?q=${e.target.value}`).then((res) => res.json())
+    setData(res)
+  }
 
   return (
     <>
@@ -20,9 +27,9 @@ const GitImportCard: React.FC = () => {
           <Select.Option
             onClick={() =>
               window.open(
-                `https://github.com/apps/dply-app/installations/new?state=${base64url(
-                  JSON.stringify({ next: '/new' }),
-                )}`,
+                `https://github.com/apps/${
+                  process.env.NODE_ENV === 'production' ? 'dply-app' : 'dply-app-dev'
+                }/installations/new?state=${base64url(JSON.stringify({ next: '/new' }))}`,
                 'Add a GitHub Org or User',
                 'toolbar=no,location=no,menubar=no',
               )
@@ -36,18 +43,21 @@ const GitImportCard: React.FC = () => {
           </Select.Option>
           <Select.Option value="2">Option 1</Select.Option>
         </Select>
-        <Input icon={<Search />} placeholder="Search Repos" className="mb-2" />
+        <Input icon={<Search />} placeholder="Search Repos" onChange={search} className="mb-2" />
         {/* <Input icon={<Search />} placeholder="Search Repos" className="mb-2" onChange={search} /> */}
       </div>
+      <DataCard data={data} user={user} />
+    </>
+  )
+}
 
-      {data === {} && (
-        <>
-          <LoadingCard />
-          <LoadingCard />
-          <LoadingCard />
-          <LoadingCard />
-        </>
-      )}
+type dataCardArgs = {
+  data: Array<Record<string, unknown>>
+  user: getCurrentUserResult | null
+}
+const DataCard = ({ data, user }: dataCardArgs): JSX.Element => {
+  return (
+    <>
       {data !== undefined &&
         Object.keys(data)
           .slice(0, 4)
@@ -81,4 +91,5 @@ const GitImportCard: React.FC = () => {
     </>
   )
 }
+
 export default GitImportCard

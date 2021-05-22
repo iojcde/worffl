@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { FC, Suspense } from 'react'
 import { Avatar, Button, useTheme, Popover } from '@geist-ui/react'
 import * as Icons from 'react-feather'
@@ -5,14 +6,25 @@ import Submenu from 'app/core/components/Submenu'
 import UserSettings from 'app/core/components/UserSettings'
 import { usePrefers } from 'app/core/hooks/usePrefers'
 import { useCurrentUser } from '../hooks/useCurrentUser'
-
+import { Image } from 'blitz'
 const ProfilePicture: FC<{ className?: string }> = ({ className }) => {
   const user = useCurrentUser()
-  if (user !== null && user.picture !== null)
-    return (
-      <Avatar style={{ width: '30px', height: '30px' }} className={className} src={user.picture} />
-    )
-  else return <Avatar style={{ width: '30px', height: '30px' }} />
+  return (
+    <div className="mr-2 flex items-center">
+      <Image
+        width={32}
+        height={32}
+        loading="lazy"
+        alt=""
+        priority={false}
+        decoding="async"
+        className={className + ' rounded-full '}
+        // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+        src={user?.picture!}
+        //  This navbar only shows when logged in, so this doesnt matter
+      />
+    </div>
+  )
 }
 
 const UserName: FC = () => {
@@ -33,7 +45,7 @@ const ProjectMenu: React.FC = () => {
   return (
     <>
       <nav className="menu-nav pt-4 transition relative">
-        <div className="flex items-center">
+        <div className="flex items-center fade-in">
           <Suspense
             fallback={
               <>
@@ -41,7 +53,7 @@ const ProjectMenu: React.FC = () => {
               </>
             }
           >
-            <ProfilePicture className="mr-2" />
+            <ProfilePicture />
             <UserName />
           </Suspense>
 
@@ -77,8 +89,8 @@ const ProjectMenu: React.FC = () => {
             placement="bottomEnd"
             portalClassName="user-settings__popover"
           >
-            <button className="user-settings__button">
-              <Suspense fallback={<Avatar text="OA" />}>
+            <button className="user-settings__button flex items-center">
+              <Suspense fallback={<Avatar text="" />}>
                 <ProfilePicture />
               </Suspense>
             </button>
@@ -100,6 +112,7 @@ const ProjectMenu: React.FC = () => {
           height: 48px;
           box-sizing: border-box;
         }
+
         .menu-nav__title {
           font - size: 14px;
           font-weight: 500;

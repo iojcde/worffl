@@ -35,6 +35,7 @@ const Submenu: React.FC = () => {
           height: 48px;
           position: relative;
           overflow: hidden;
+          background-color: ${theme.palette.background};
         }
         .sub-menu_sticky {
           position: fixed;
