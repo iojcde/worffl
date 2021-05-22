@@ -15,8 +15,6 @@ ENV GITHUB_PRIVATE_KEY=${GITHUB_PRIVATE_KEY}
 
 WORKDIR /usr/src/app
 
-
-RUN apt-get update && apt-get install curl git -y
 COPY package.json yarn.lock ./
 COPY ./.blitz ./.blitz
 ENV SKIP_GENERATE="true"
