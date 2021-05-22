@@ -36,11 +36,6 @@ build app:
 build image:
   stage: build-image
 
-  artifacts:
-    paths:
-    - ".blitz/"
-    - ".next/"
-
   image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:latest"
 
   services:
