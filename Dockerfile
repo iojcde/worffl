@@ -1,4 +1,4 @@
-FROM node:14-slim
+FROM registry.jcde.xyz/sirius/sirius-images/builder:latest
 
 ARG GITHUB_CLIENT_ID
 ARG GITHUB_CLIENT_SECRET
