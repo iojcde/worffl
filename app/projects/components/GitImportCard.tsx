@@ -66,7 +66,7 @@ const DataCard = ({ data, user }: dataCardArgs): JSX.Element => {
               <div className="flex items-center">
                 <GitHub className="mr-3 md:w-5 md:h-5" />
                 <span className="w-full">
-                  {user?.name}/{data[itemKey].name}
+                  {data[itemKey].name}
                   <span className="ml-2 text-xs">
                     {Math.round(
                       (Date.now() - new Date(data[itemKey].updated_at).getTime()) /
