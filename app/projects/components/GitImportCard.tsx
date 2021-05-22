@@ -23,7 +23,7 @@ const GitImportCard: React.FC = () => {
     if (antiCSRFToken) {
       // Set fetch request header["anti-csrf"] = antiCSRFToken
 
-      const res = await fetch(`/api/github/search/?q=${e.target.value}`, {
+      const res = await fetch(`/api/github/search?q=${e.target.value}`, {
         headers: { 'anti-csrf': antiCSRFToken },
       }).then((res) => res.json())
       setData(res)
