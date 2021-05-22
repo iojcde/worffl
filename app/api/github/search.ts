@@ -6,11 +6,19 @@ const searchApi: BlitzApiHandler = async (req, res) => {
 
   const query = req.query.q
   session.$authorize()
-  console.log(query)
+
   const repos = await db.ghRepo.findMany({
     where: {
-      name: { contains: query as string },
-      ownerId: session.userId,
+      OR: [
+        {
+          name: { contains: query as string, mode: 'insensitive' },
+          ownerId: session.userId,
+        },
+        {
+          name: { contains: query as string, mode: 'insensitive' },
+          ownerTeam: { members: { some: { id: session.userId } } },
+        },
+      ],
     },
   })
   res.json(repos)

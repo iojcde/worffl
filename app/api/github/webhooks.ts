@@ -7,6 +7,7 @@ export const config = {
   clientID: process.env.GITHUB_CLIENT_ID as string,
   clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
   webhookSecret: process.env.GITHUB_WEBHOOK_SECRET as string,
+  appId: parseInt(process.env.GITHUB_APP_ID as string) as number,
   privateKey:
     process.env.NODE_ENV === 'development'
       ? (fs.readFileSync('/home/jcde/sirius/dply-app-dev.pem', 'utf-8') as string)
@@ -14,7 +15,7 @@ export const config = {
 }
 
 const app = new App({
-  appId: 95733,
+  appId: config.appId,
   privateKey: config.privateKey,
   oauth: {
     clientId: config.clientID,

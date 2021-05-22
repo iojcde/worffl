@@ -27,8 +27,7 @@ model User {
   sessions       Session[]
   projects       Project[]
   ghRepos        GhRepo[]
-  Team           Team?     @relation(fields: [teamId], references: [id])
-  teamId         Int?
+  teams          Team[]
 }
 
 enum role {
@@ -126,7 +125,7 @@ model Team {
   id             Int       @id @default(autoincrement())
   name           String    @unique
   createdAt      DateTime  @default(now())
-  Members        User[]
+  members        User[]
   ghOrgId        Int       @unique
   installationId Int
   Project        Project[]

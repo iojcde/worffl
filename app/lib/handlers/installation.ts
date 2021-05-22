@@ -9,7 +9,7 @@ export const installationHandler = async ({
   payload,
 }: InstallationCreatedHandlerArgsType): Promise<void> => {
   const auth = createAppAuth({
-    appId: 116181,
+    appId: config.appId,
     privateKey: config.privateKey,
     clientId: config.clientID,
     clientSecret: config.clientSecret,

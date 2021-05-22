@@ -3,6 +3,7 @@ import { GitHub, Plus, Search } from 'react-feather'
 import { useCurrentUser } from 'app/core/hooks/useCurrentUser'
 import { ChangeEvent, useState } from 'react'
 import { Link } from 'blitz'
+import { getAntiCSRFToken } from 'blitz'
 import base64url from 'base64url'
 import { getCurrentUserResult } from 'app/users/queries/getCurrentUser'
 
@@ -11,13 +12,22 @@ const GitImportCard: React.FC = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState<Array<Record<string, unknown>>>([])
   const user = useCurrentUser()
+
+  const antiCSRFToken = getAntiCSRFToken()
   const sleep = (ms: number): Promise<unknown> => {
     return new Promise((resolve) => setTimeout(resolve, ms))
   }
   const search = async (e: ChangeEvent<HTMLInputElement>): Promise<void> => {
     await sleep(1000)
-    const res = await fetch(`/api/github/search/?q=${e.target.value}`).then((res) => res.json())
-    setData(res)
+
+    if (antiCSRFToken) {
+      // Set fetch request header["anti-csrf"] = antiCSRFToken
+
+      const res = await fetch(`/api/github/search/?q=${e.target.value}`, {
+        headers: { 'anti-csrf': antiCSRFToken },
+      }).then((res) => res.json())
+      setData(res)
+    }
   }
 
   return (
