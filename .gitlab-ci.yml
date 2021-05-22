@@ -9,11 +9,10 @@ stages:
 
 
 build app:
-  image: node:14-alpine
+  image: registry.jcde.xyz/sirius/sirius-images/builder:latest
   stage: build-app
 
   script:
-   - apk --update add --no-cache curl git python3 alpine-sdk bash autoconf libtool automake
    - export SKIP_GENERATE="true"
    - yarn --frozen-lockfile --production
    - rm -rf /root/.cache/prisma
