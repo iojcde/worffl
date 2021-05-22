@@ -52,8 +52,7 @@ build image:
     --password-stdin
   - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG || docker pull $CI_REGISTRY_IMAGE:main
     || true
-  - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA --cache-from=$CI_REGISTRY_IMAGE:$CI_BUILD_REF_NAME --cache-from=$CI_REGISTRY_IMAGE:main --shm-size 1G --build-arg GITHUB_CLIENT_ID="$GITHUB_CLIENT_ID" --build-arg  GITHUB_CLIENT_SECRET="$GITHUB_CLIENT_SECRET"  --build-arg GITHUB_WEBHOOK_SECRET="$GITHUB_WEBHOOK_SECRET"  --build-arg  DATABASE_URL="$DATABASE_URL"  --build-arg  SESSION_SECRET_KEY="$SESSION_SECRET_KEY"  --build-arg  GITHUB_PRIVATE_KEY="$GITHUB_PRIVATE_KEY"  --build-arg  GITHUB_APP_ID="$GITHUB_APP_ID" .
-
+  - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA --cache-from=$CI_REGISTRY_IMAGE:$CI_BUILD_REF_NAME --cache-from=$CI_REGISTRY_IMAGE:main --shm-size 1G .
   - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
   - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
@@ -74,7 +73,7 @@ deploy to production:
   - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY"
   - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
   - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker container rm -f $PROJECT_PATH || true"
-  - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker run -d -p 3002:5000 --restart always --name $PROJECT_PATH $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
+  - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker run -d -p 3002:5000 --restart always --e GITHUB_CLIENT_ID="$GITHUB_CLIENT_ID" --e  GITHUB_CLIENT_SECRET="$GITHUB_CLIENT_SECRET"  --e GITHUB_WEBHOOK_SECRET="$GITHUB_WEBHOOK_SECRET"  --e  DATABASE_URL="$DATABASE_URL"  --e  SESSION_SECRET_KEY="$SESSION_SECRET_KEY"  --e  GITHUB_PRIVATE_KEY="$GITHUB_PRIVATE_KEY"  --e  GITHUB_APP_ID="$GITHUB_APP_ID"  --name $PROJECT_PATH $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
   
   environment:
     name: production
