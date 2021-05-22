@@ -1,4 +1,4 @@
-import { Deployment, Project, Team, User } from 'db'
+import db, { Deployment, Project, Team, User } from 'db'
 import { createAppAuth } from '@octokit/auth-app'
 import { config } from 'app/api/github/webhooks'
 import Docker from 'dockerode'
@@ -10,9 +10,10 @@ type runExecProps = {
   cmd: string
   workdir: string
   history: string[]
+  dpId: number
 }
 
-const runExec = ({ container, cmd, workdir, history }: runExecProps): Promise<void> => {
+const runExec = ({ container, cmd, workdir, history, dpId }: runExecProps): Promise<void> => {
   return new Promise<void>((resolve) => {
     const options = {
       Cmd: ['/bin/sh', '-c', cmd],
@@ -27,6 +28,7 @@ const runExec = ({ container, cmd, workdir, history }: runExecProps): Promise<vo
 
         stream?.on('data', (chunk) => {
           history.push(chunk)
+          db.deployment.update({ data: { logs: history }, where: { id: dpId } })
         })
 
         setInterval(() => {
@@ -79,6 +81,7 @@ const deployNode = async (args: deployNodeArgs): Promise<void> => {
 
   const installationAuthentication = await auth({ type: 'installation' })
   const repo = `https://x-access-token:${installationAuthentication['token']}@github.com/${repoFullName}`
+  const dpId = args.deployment.id
   docker.createContainer(
     {
       Image: args.image,
@@ -89,10 +92,10 @@ const deployNode = async (args: deployNodeArgs): Promise<void> => {
     },
     (err, container) => {
       container?.start({}, async (err, data) => {
-        runExec({ container, cmd: 'git clone ' + repo, workdir: '/usr/src/app', history })
-        await runExec({ container, cmd: commands['install'], workdir, history })
-        await runExec({ container, cmd: commands['build'], workdir, history })
-        await runExec({ container, cmd: commands['start'], workdir, history })
+        runExec({ container, cmd: 'git clone ' + repo, workdir: '/usr/src/app', history, dpId })
+        await runExec({ container, cmd: commands['install'], workdir, history, dpId })
+        await runExec({ container, cmd: commands['build'], workdir, history, dpId })
+        await runExec({ container, cmd: commands['start'], workdir, history, dpId })
         console.log('finished')
       })
     },

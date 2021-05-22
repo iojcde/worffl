@@ -17,7 +17,7 @@ const Submenu: React.FC = () => {
     <>
       <nav className="sub-menu__wrapper transition shadow-sm ">
         <div className={`sub-menu ${sticky ? 'sub-menu_sticky' : ''}`}>
-          <div className="sub-menu__inner bg-white">
+          <div className="sub-menu__inner">
             <Tabs value={router.asPath} onChange={(route) => router.push(route)}>
               <Tabs.Item label="Overview" value="/" />
               <Tabs.Item label="Projects" value="/projects" />
@@ -34,8 +34,8 @@ const Submenu: React.FC = () => {
         .sub-menu__wrapper {
           height: 48px;
           position: relative;
-          overflow: hidden;
           background-color: ${theme.palette.background};
+          overflow: hidden;
         }
         .sub-menu_sticky {
           position: fixed;
@@ -49,6 +49,7 @@ const Submenu: React.FC = () => {
         .sub-menu__inner {
           display: flex;
           width: ${theme.layout.pageWidthWithMargin};
+
           max-width: 100%;
           margin: 0 auto;
           padding: 0 ${theme.layout.pageMargin};
