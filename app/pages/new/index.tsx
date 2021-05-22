@@ -13,7 +13,7 @@ const NewProjectPage: BlitzPage = () => {
         Create New Project
       </Text>
       <div className=" shadow-xl mb-20 transition ">
-        <Card style={{ height: '445px' }}>
+        <Card style={{ height: '530px' }}>
           <h4>Import Git repository</h4>
           <Suspense fallback={<Loading />}>
             <GitImportCard />

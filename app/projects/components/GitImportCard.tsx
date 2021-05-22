@@ -9,7 +9,7 @@ import { getCurrentUserResult } from 'app/users/queries/getCurrentUser'
 const GitImportCard: React.FC = () => {
   // not implemented yet
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [data, setData] = useState([])
+  const [data, setData] = useState<Array<Record<string, unknown>>>([])
   const user = useCurrentUser()
   const sleep = (ms: number): Promise<unknown> => {
     return new Promise((resolve) => setTimeout(resolve, ms))
@@ -46,7 +46,13 @@ const GitImportCard: React.FC = () => {
         <Input icon={<Search />} placeholder="Search Repos" onChange={search} className="mb-2" />
         {/* <Input icon={<Search />} placeholder="Search Repos" className="mb-2" onChange={search} /> */}
       </div>
-      <DataCard data={data} user={user} />
+      {console.log(data)}
+      {data.length === 0 && (
+        <div className=" py-48 w-full bg-gray-100 rounded shadow-inner text-center text-sm">
+          Nothing found...
+        </div>
+      )}
+      {data.length !== 0 && <DataCard data={data} user={user} />}
     </>
   )
 }
@@ -56,11 +62,11 @@ type dataCardArgs = {
   user: getCurrentUserResult | null
 }
 const DataCard = ({ data, user }: dataCardArgs): JSX.Element => {
-  return (
-    <>
-      {data !== undefined &&
-        Object.keys(data)
-          .slice(0, 4)
+  if (data !== undefined)
+    return (
+      <div className="w-full bg-gray-100 rounded shadow-inner  text-sm" style={{ height: '400px' }}>
+        {Object.keys(data)
+          .slice(0, 5)
           .map((itemKey) => (
             <Card key={itemKey} style={{ marginBottom: '3px' }}>
               <div className="flex items-center">
@@ -69,7 +75,7 @@ const DataCard = ({ data, user }: dataCardArgs): JSX.Element => {
                   {data[itemKey].name}
                   <span className="ml-2 text-xs">
                     {Math.round(
-                      (Date.now() - new Date(data[itemKey].updated_at).getTime()) /
+                      (Date.now() - new Date(data[itemKey].updatedAt).getTime()) /
                         (1000 * 60 * 60 * 24),
                     )}
                     d ago
@@ -88,8 +94,9 @@ const DataCard = ({ data, user }: dataCardArgs): JSX.Element => {
               </div>
             </Card>
           ))}
-    </>
-  )
+      </div>
+    )
+  return <></>
 }
 
 export default GitImportCard

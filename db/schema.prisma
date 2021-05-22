@@ -38,13 +38,13 @@ enum role {
 
 model GhRepo {
   id          Int      @id @default(autoincrement())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime
+  updatedAt   DateTime
   name        String
   ghrepoid    Int      @unique
   owner       User?    @relation(fields: [ownerId], references: [id])
   ownerTeam   Team?    @relation(fields: [ownerTeamId], references: [id])
-  ownerTeamId Int?     @unique
+  ownerTeamId Int?
   projectId   Int?
   project     Project? @relation(fields: [projectId], references: [id])
   ownerId     Int?

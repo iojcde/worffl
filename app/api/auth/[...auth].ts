@@ -21,6 +21,7 @@ export default passportAuth({
             // This can happen if you haven't enabled email access in your twitter app permissions
             return done(new Error("Github OAuth response doesn't have email."))
           }
+
           const user = await db.user.upsert({
             where: { email },
             create: {
