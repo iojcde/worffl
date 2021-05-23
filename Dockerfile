@@ -1,5 +1,13 @@
 FROM registry.jcde.xyz/sirius/sirius-images/builder:latest
 
+ENV GITHUB_CLIENT_SECRET=willbereplacedlater
+ENV GITHUB_CLIENT_ID=willbereplacedlater
+ENV GITHUB_WEBHOOK_SECRET=willbereplacedlater
+ENV DATABASE_URL=willbereplacedlater
+ENV SESSION_SECRET_KEY=willbereplacedlater
+ENV GITHUB_PRIVATE_KEY=willbereplacedlater
+ENV GITHUB_APP_ID=willbereplacedlater
+
 WORKDIR /usr/src/app
 
 COPY package.json yarn.lock ./
