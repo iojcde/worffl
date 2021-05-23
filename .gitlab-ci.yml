@@ -68,7 +68,16 @@ deploy to production:
   - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY"
   - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
   - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker container rm -f $PROJECT_PATH || true"
-  - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker run -d -p 3002:5000 --restart always -e GITHUB_CLIENT_ID=$GITHUB_CLIENT_ID -e  GITHUB_CLIENT_SECRET=$GITHUB_CLIENT_SECRET  -e GITHUB_WEBHOOK_SECRET=$GITHUB_WEBHOOK_SECRET  -e  DATABASE_URL=$DATABASE_URL  -e  SESSION_SECRET_KEY=$SESSION_SECRET_KEY  -e  GITHUB_PRIVATE_KEY=$GITHUB_PRIVATE_KEY  -e  GITHUB_APP_ID=$GITHUB_APP_ID  --name $PROJECT_PATH $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
+  - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "cat << EOF > envs.list
+    GITHUB_CLIENT_ID=$GITHUB_CLIENT_ID  
+    GITHUB_CLIENT_SECRET=$GITHUB_CLIENT_SECRET   
+    GITHUB_WEBHOOK_SECRET=$GITHUB_WEBHOOK_SECRET    
+    DATABASE_URL=$DATABASE_URL    
+    SESSION_SECRET_KEY=$SESSION_SECRET_KEY    
+    GITHUB_PRIVATE_KEY=$GITHUB_PRIVATE_KEY    
+    GITHUB_APP_ID=$GITHUB_APP_ID 
+    EOF"
+  - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker run -d -p 3002:5000 --env-file envs.list --restart always  --name $PROJECT_PATH $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
   
   environment:
     name: production
