@@ -1,6 +1,5 @@
 import { BlitzPage } from 'blitz'
 import Layout from 'app/core/layouts/Layout'
-import { Loading } from '@geist-ui/react'
 import { useEffect } from 'react'
 
 /*
@@ -10,12 +9,7 @@ import { useEffect } from 'react'
 
 const Done: BlitzPage = () => {
   useEffect(() => window.close())
-  return (
-    <h2>
-      Success! This window will close automatically...
-      <Loading />
-    </h2>
-  )
+  return <h2>Success! This window will close automatically...</h2>
 }
 
 Done.suppressFirstRenderFlicker = true

@@ -1,60 +1,152 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-body {
-  @apply transition !important;
+
+@layer components {
+  .hero {
+    @apply w-full text-[#333];
+  }
+}
+
+.title {
+  @apply m-0 w-full pt-20;
+  font-size: 48px;
+}
+
+.title,
+.description {
+  @apply text-center;
+}
+/* .button.wide {
+  @apply bg-indigo-500 px-16 text-white shadow-md rounded-md  focus:outline-none;
+  padding:25px;
+} */
+/* .button {
+  @apply bg-indigo-500 px-4 text-white shadow-md rounded-md py-2 focus:outline-none hover:bg-white hover:text-indigo-500 transition hover:ring-1 ring-indigo-500
+} */
+.button {
+  @apply bg-indigo-500 text-white shadow rounded-md focus:outline-none hover:bg-white hover:text-indigo-600 duration-200 ease transition hover:ring-1 ring-indigo-500;
 }
 .button {
-  @apply w-2 !important;
-}
-.fade-in {
-  animation: fadeIn 0.2s;
-  -webkit-animation: fadeIn 0.2s;
-  -moz-animation: fadeIn 0.2s;
-  -o-animation: fadeIn 0.2s;
-  -ms-animation: fadeIn 0.2s;
-}
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-@-moz-keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-@-webkit-keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+  appearance: none;
+  position: relative;
+  display: inline-flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  z-index: 0;
+  text-align: center;
+  text-decoration: none;
+  line-height: 38px;
+  white-space: nowrap;
+  font-weight: 500;
+  min-width: auto;
+  height: 40px;
+  padding: 0px 25px;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+  margin: 0px;
+  user-select: none;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
-@-o-keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+.button.wide {
+  @apply bg-indigo-500 text-white shadow rounded-md focus:outline-none hover:bg-white hover:text-indigo-600 duration-200 ease transition hover:ring-1 ring-indigo-500;
+  appearance: none;
+  position: relative;
+  display: inline-flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  appearance: none;
+  position: relative;
+  display: inline-flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  z-index: 0;
+  text-align: center;
+  text-decoration: none;
+  line-height: 38px;
+  white-space: nowrap;
+  font-weight: 500;
+  min-width: auto;
+  height: 40px;
+  padding: 0px 25px;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+  margin: 0px;
+  user-select: none;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  z-index: 0;
+  text-align: center;
+  text-decoration: none;
+  line-height: 38px;
+  white-space: nowrap;
+  font-weight: 500;
+  min-width: 170px;
+  height: 40px;
+  padding: 0px 25px;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+  margin: 0px;
+  user-select: none;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
-@-ms-keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+.button.small {
+  appearance: none;
+  position: relative;
+  display: inline-flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  z-index: 0;
+  text-align: center;
+  text-decoration: none;
+  line-height: 38px;
+  white-space: nowrap;
+  font-weight: 500;
+  min-width: auto;
+  height: 30px;
+  padding: 0px 20px;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+  margin: 0px;
+  user-select: none;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.nocolor {
+  @apply bg-transparent hover:text-black ring-1 hover:ring-gray-600 ring-gray-200 text-gray-500;
+}
+
+::-moz-selection {
+  /* Code for Firefox */
+
+  background: #79ffe1;
+}
+
+::selection {
+  background: #79ffe1;
 }

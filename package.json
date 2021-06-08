@@ -22,32 +22,39 @@
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [
-      "eslint --fix"
+      "tsc --noEmit"
     ]
   },
   "dependencies": {
-    "@geist-ui/react": "2.1.5",
+    "@headlessui/react": "1.2.0",
     "@octokit/app": "12.0.2",
     "@octokit/auth-app": "3.4.0",
-    "@prisma/client": "2.23.0",
+    "@prisma/client": "2.24.1",
     "@types/dockerode": "3.2.3",
-    "autoprefixer": "10.2.5",
-    "blitz": "0.35.0",
+    "@types/http-proxy": "1.17.6",
+    "@types/redis": "2.8.29",
+    "autoprefixer": "10",
+    "awesome-debounce-promise": "2.1.0",
+    "blitz": "0.36.4",
     "dockerode": "3.3.0",
     "final-form": "4.20.2",
     "http-proxy": "1.18.1",
-    "inter-ui": "3.18.1",
     "octokit": "1.0.5",
     "passport-github2": "0.1.12",
-    "postcss": "8.3.0",
-    "prisma": "2.23.0",
+    "postcss": "8",
+    "prisma": "2.24.1",
     "react": "0.0.0-experimental-6a589ad71",
+    "react-async-hook": "3.6.2",
     "react-dom": "0.0.0-experimental-6a589ad71",
     "react-error-boundary": "3.1.3",
-    "react-feather": "2.0.9",
     "react-final-form": "6.5.3",
+    "react-highlight-words": "0.17.0",
+    "react-icons": "4.2.0",
+    "redis": "3.1.2",
     "tailwindcss": "2.1.2",
     "typescript": "4.2.4",
+    "use-constant": "1.1.0",
+    "winston": "3.3.3",
     "zod": "3.0.2"
   },
   "devDependencies": {

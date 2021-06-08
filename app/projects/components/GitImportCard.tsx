@@ -1,112 +1,149 @@
-import { Button, Card, Input, Select } from '@geist-ui/react'
-import { GitHub, Plus, Search } from 'react-feather'
-import { useCurrentUser } from 'app/core/hooks/useCurrentUser'
-import { ChangeEvent, useState } from 'react'
+import { AiFillGithub } from 'react-icons/ai'
+import { useEffect } from 'react'
 import { Link } from 'blitz'
 import { getAntiCSRFToken } from 'blitz'
-import base64url from 'base64url'
-import { getCurrentUserResult } from 'app/users/queries/getCurrentUser'
+import ConnectSelector from './connectSelector'
+import { GhRepo } from 'db'
+import { useDebouncedSearch, UseDebouncedSearchReturn } from 'app/lib/utils'
+import Highlighter from 'react-highlight-words'
+import { useCurrentUser } from 'app/core/hooks/useCurrentUser'
 
 const GitImportCard: React.FC = () => {
-  // not implemented yet
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [data, setData] = useState<Array<Record<string, unknown>>>([])
-  const user = useCurrentUser()
+  const useSearch = (): UseDebouncedSearchReturn =>
+    useDebouncedSearch((text) => fetchvalue({ query: text }))
 
   const antiCSRFToken = getAntiCSRFToken()
-  const sleep = (ms: number): Promise<unknown> => {
-    return new Promise((resolve) => setTimeout(resolve, ms))
-  }
-  const search = async (e: ChangeEvent<HTMLInputElement>): Promise<void> => {
-    await sleep(1000)
-
+  async function fetchvalue({
+    query,
+  }: {
+    query?: string
+  }): Promise<Record<string, unknown>[] | undefined> {
     if (antiCSRFToken) {
-      // Set fetch request header["anti-csrf"] = antiCSRFToken
-
-      const res = await fetch(`/api/github/search?q=${e.target.value}`, {
+      const url = query === '' ? '/api/github/search' : `/api/github/search?q=${query}`
+      const res = await fetch(url, {
         headers: { 'anti-csrf': antiCSRFToken },
       }).then((res) => res.json())
-      setData(res)
+      return res
     }
+    return []
   }
 
+  const { inputText, setInputText, searchResults } = useSearch()
+
+  useEffect(() => {
+    setInputText('')
+  }, [setInputText])
+
   return (
-    <>
-      <div className="flex flex-row gap-2">
-        <Select className="w-56">
-          <Select.Option
-            onClick={() =>
-              window.open(
-                `https://github.com/apps/${
-                  process.env.NODE_ENV === 'production' ? 'dply-app' : 'dply-app-dev'
-                }/installations/new?state=${base64url(JSON.stringify({ next: '/new' }))}`,
-                'Add a GitHub Org or User',
-                'toolbar=no,location=no,menubar=no',
-              )
-            }
-            value="1"
-          >
-            <div className="flex items-center">
-              <Plus className="h-3 w-3 mr-2" />
-              Add GitHub Account or Org
-            </div>
-          </Select.Option>
-          <Select.Option value="2">Option 1</Select.Option>
-        </Select>
-        <Input icon={<Search />} placeholder="Search Repos" onChange={search} className="mb-2" />
-        {/* <Input icon={<Search />} placeholder="Search Repos" className="mb-2" onChange={search} /> */}
+    <div className="p-4 mt-2 rounded-md border" style={{ height: 445 }}>
+      <div className="flex flex-row gap-3">
+        <ConnectSelector />
+        <input
+          value={inputText}
+          className="border mb-2 rounded-md px-2 text-sm outline-none focus:ring-1 ring-indigo-500"
+          onChange={(e) => setInputText(e.target.value)}
+          type="text"
+        />
       </div>
-      {console.log(data)}
-      {data.length === 0 && (
-        <div className=" py-48 w-full bg-gray-100 rounded shadow-inner text-center text-sm">
-          Nothing found...
+      {searchResults.result?.length !== 0 && !searchResults.loading && (
+        <div style={{ height: 360 }}>
+          <DataCard data={searchResults.result} input={inputText} />
         </div>
       )}
-      {data.length !== 0 && <DataCard data={data} user={user} />}
-    </>
+      {searchResults.loading && (
+        <div className="w-full flex  rounded" style={{ height: 360 }}>
+          <p className="text-center m-auto">Loading..</p>
+        </div>
+      )}
+      {searchResults.result?.length === 0 && !searchResults.loading && (
+        <div
+          className="w-full  bg-gray-100 text-center border rounded flex "
+          style={{ height: 360 }}
+        >
+          <div className="m-auto">
+            <span className="font-medium">No Results Found</span>
+            <p className="text-sm">
+              Your search for <span className="font-medium">{inputText}</span> did not return any
+              results.
+            </p>
+            <p></p>
+          </div>
+        </div>
+      )}
+    </div>
   )
 }
 
 type dataCardArgs = {
-  data: Array<Record<string, unknown>>
-  user: getCurrentUserResult | null
+  data: Array<Record<string, unknown>> | undefined
+  input: string
 }
-const DataCard = ({ data, user }: dataCardArgs): JSX.Element => {
+const DataCard = ({ data, input }: dataCardArgs): JSX.Element => {
+  const user = useCurrentUser()
   if (data !== undefined)
     return (
-      <div className="w-full bg-gray-100 rounded shadow-inner  text-sm" style={{ height: '400px' }}>
+      <div className="w-full bg-gray-100 rounded  flex flex-col   text-sm">
         {Object.keys(data)
           .slice(0, 5)
-          .map((itemKey) => (
-            <Card key={itemKey} style={{ marginBottom: '3px' }}>
-              <div className="flex items-center">
-                <GitHub className="mr-3 md:w-5 md:h-5" />
-                <span className="w-full">
-                  {data[itemKey].name}
-                  <span className="ml-2 text-xs">
-                    {Math.round(
-                      (Date.now() - new Date(data[itemKey].updatedAt).getTime()) /
-                        (1000 * 60 * 60 * 24),
-                    )}
-                    d ago
+          .map((itemKey) => {
+            const repo: GhRepo = data[itemKey]
+            return (
+              <div key={itemKey} className="bg-white p-4 rounded border">
+                <div className="flex items-center">
+                  <AiFillGithub className="mr-3  " size="2em" />
+                  <span className="w-full">
+                    <Highlighter
+                      searchWords={[input]}
+                      autoEscape={true}
+                      textToHighlight={repo.name}
+                    />
+                    <span className="ml-2 text-xs">
+                      {Math.round(
+                        (Date.now() - new Date(data[itemKey].updatedAt).getTime()) /
+                          (1000 * 60 * 60 * 24),
+                      )}
+                      d ago
+                    </span>
                   </span>
-                </span>
-                <Link
-                  href={{
-                    pathname: '/new/details',
-                    query: { repo: data[itemKey].html_url, id: data[itemKey].id },
-                  }}
-                >
-                  <Button className="min-w-max px-3" size="small" type="success">
-                    Import
-                  </Button>
-                </Link>
+                  <Link
+                    href={{
+                      pathname: '/new/details',
+                      query: { id: repo.id, target: user?.id },
+                    }}
+                  >
+                    <button className="min-w-max px-3 text-sm button">Import</button>
+                  </Link>
+                </div>
               </div>
-            </Card>
-          ))}
+            )
+          })}
       </div>
     )
   return <></>
 }
 
 export default GitImportCard
+
+/*  <div className="flex flex-row gap-2">
+          <Select className="w-56">
+            <Select.Option
+              onClick={() =>
+                window.open(
+                  `https://github.com/apps/${process.env.NODE_ENV === 'production' ? 'dply-app' : 'dply-app-dev'
+                  }/installations/new?state=${base64url(JSON.stringify({ next: '/new' }))}`,
+                  'Add a GitHub Org or User',
+                  'toolbar=no,location=no,menubar=no',
+                )
+              }
+              data="1"
+            >
+              <div className="flex items-center">
+                <Plus className="h-3 w-3 mr-2" />
+              Add GitHub Account or Org
+            </div>
+            </Select.Option>
+            <Select.Option value="2">Option 1</Select.Option>
+          </Select>
+          <Input icon={<Search />} placeholder="Search Repos" onChange={search} className="mb-2" />
+        </div>
+  */

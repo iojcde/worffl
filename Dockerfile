@@ -1,26 +1,18 @@
-FROM registry.jcde.xyz/sirius/sirius-images/builder:latest
-
-ENV GITHUB_CLIENT_SECRET=willbereplacedlater
-ENV GITHUB_CLIENT_ID=willbereplacedlater
-ENV GITHUB_WEBHOOK_SECRET=willbereplacedlater
-ENV DATABASE_URL=willbereplacedlater
-ENV SESSION_SECRET_KEY=willbereplacedlater
-ENV GITHUB_PRIVATE_KEY=willbereplacedlater
-ENV GITHUB_APP_ID=willbereplacedlater
-
+FROM node:14-buster
 WORKDIR /usr/src/app
+RUN apt-get update && apt-get install openssl curl
+COPY package.json .
+COPY yarn.lock .
 
-COPY package.json yarn.lock ./
-COPY ./.blitz ./.blitz
-ENV SKIP_GENERATE="true"
-RUN YARN_CACHE_FOLDER=/dev/shm/yarn_cache yarn --production
-#prisma bug https://github.com/prisma/prisma/issues/5304
-RUN rm -rf /root/.cache/prisma
-COPY ./db/schema.prisma ./db/schema.prisma
-COPY blitz.config.js .
+RUN yarn install
+COPY . .
 RUN yarn blitz prisma generate
+RUN yarn build
+EXPOSE 3000
 
-EXPOSE 5000
+# If possible, run your container using `docker run --init`
+# Otherwise, you can use `tini`:
+# RUN apk add --no-cache tini
+# ENTRYPOINT ["/sbin/tini", "--"]
 
-CMD [ "yarn", "start", "-p", "5000" ]
-HEALTHCHECK CMD curl -f http://localhost:5000/ || exit 1;
+CMD ["./node_modules/.bin/blitz","start"]

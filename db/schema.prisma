@@ -16,7 +16,7 @@ model User {
   id             Int       @id @default(autoincrement())
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
-  name           String
+  name           String    @unique
   ghusername     String?
   ghuserid       Int       @unique
   email          String    @unique
@@ -36,18 +36,22 @@ enum role {
 }
 
 model GhRepo {
-  id          Int      @id @default(autoincrement())
-  createdAt   DateTime
-  updatedAt   DateTime
-  name        String
-  ghrepoid    Int      @unique
-  owner       User?    @relation(fields: [ownerId], references: [id])
-  ownerTeam   Team?    @relation(fields: [ownerTeamId], references: [id])
-  ownerTeamId Int?
-  projectId   Int?
-  project     Project? @relation(fields: [projectId], references: [id])
-  ownerId     Int?
-  private     Boolean
+  id            Int       @id @default(autoincrement())
+  createdAt     DateTime
+  updatedAt     DateTime
+  ownerType     OwnerType @default(USER)
+  name          String    @unique
+  ghid          Int       @unique
+  owner         User?     @relation(fields: [ownerId], references: [id])
+  ownerTeam     Team?     @relation(fields: [ownerTeamId], references: [id])
+  ownerTeamId   Int?
+  projectId     Int?
+  project       Project?  @relation(fields: [projectId], references: [id])
+  ownerId       Int?
+  defaultBranch String    @default("main")
+  private       Boolean
+  branches      String[]
+  lang          String?
 }
 
 model Session {
@@ -86,17 +90,37 @@ enum TokenType {
   RESET_PASSWORD
 }
 
+enum Status {
+  IN_PROGRESS
+  SUCCESS
+  ERROR
+}
+
 model Deployment {
-  id         Int      @id @default(autoincrement())
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  name       String
-  production Boolean
-  logs       String[]
-  domain     String
-  sha        String
-  project    Project  @relation(fields: [projectId], references: [id])
-  projectId  Int
+  id        Int            @id @default(autoincrement())
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  name      String
+  type      DeploymentType
+  logs      LogLine[]
+  domain    String
+  sha       String
+  status    Status
+  project   Project        @relation(fields: [projectId], references: [id])
+  projectId Int
+}
+
+enum DeploymentType {
+  PRODUCTION
+  STAGING
+}
+
+model LogLine {
+  id           Int         @id @default(autoincrement())
+  createdAt    DateTime    @default(now())
+  content      String
+  Deployment   Deployment? @relation(fields: [deploymentId], references: [id])
+  deploymentId Int?
 }
 
 model Project {
@@ -104,9 +128,9 @@ model Project {
   id          Int          @id @default(autoincrement())
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
-  name        String
+  name        String       @unique
   lang        String
-  commands    String[]
+  commands    commands     @relation(fields: [commandsId], references: [id])
   user        User?        @relation(fields: [userId], references: [id])
   team        Team?        @relation(fields: [teamId], references: [id])
   teamId      Int?
@@ -114,6 +138,15 @@ model Project {
   Deployments Deployment[]
   GhRepo      GhRepo?
   mainBranch  String
+  commandsId  Int
+}
+
+model commands {
+  id         Int       @id @default(autoincrement())
+  installCmd String
+  buildCmd   String
+  startCmd   String
+  Project    Project[]
 }
 
 enum OwnerType {

@@ -1,0 +1,12 @@
+{
+  "image": "alpine",
+  "dply": {
+    "lang": {
+      "nodejs": {
+        "ts": true,
+        "build": "yarn build",
+        "start": "yarn start"
+      }
+    }
+  }
+}

@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "GhRepo" ALTER COLUMN "lang" DROP NOT NULL;

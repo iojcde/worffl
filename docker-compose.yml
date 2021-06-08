@@ -1,15 +1,28 @@
-redis:
-  image: redis
-  container_name: cache
-  expose:
-    - 6379
-app:
-  build: ./
-  volumes:
-    - ./:/var/www/app
-links:
-    - redis
-  ports:
-    - 5000:5000
-  environment:
-    - REDIS_URL=redis://cache
+version: '2'
+
+services:
+  redis:
+    image: redis
+    container_name: cache
+    expose:
+      - 6379
+    networks:
+      - deploy
+
+  app:
+    image: worffl
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./logs:/usr/src/app/logs
+    ports:
+      - 3000:3000
+    networks:
+      - deploy
+      - node
+
+networks:
+  deploy:
+
+  node:
+    external:
+      name: node

@@ -20,6 +20,7 @@ const searchApi: BlitzApiHandler = async (req, res) => {
         },
       ],
     },
+    orderBy: [{ createdAt: 'desc' }],
   })
   res.json(repos)
 }

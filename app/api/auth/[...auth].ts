@@ -4,7 +4,7 @@ import db from 'db'
 import { Strategy as GithubStrategy } from 'passport-github2'
 
 export default passportAuth({
-  successRedirectUrl: '/signedin',
+  successRedirectUrl: '/',
   secureProxy: true,
   errorRedirectUrl: '/',
   strategies: [

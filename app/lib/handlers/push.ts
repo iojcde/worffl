@@ -1,32 +1,47 @@
 import db from 'db'
 import deployNode from 'app/lib/deploy/frameworks/node'
 import { PushHandlerArgsType } from 'app/lib/handlers/types'
-export const pushHandler = async ({ id, name, payload }: PushHandlerArgsType): Promise<void> => {
+import logger from 'logs'
+
+const childLogger = logger.child({ service: 'pushHandler' })
+export const pushHandler = async ({ octokit, payload }: PushHandlerArgsType): Promise<void> => {
+  childLogger.info('Handling "push" event')
+
   const owner =
     payload.organization === undefined
       ? await db.user.findFirst({ where: { ghuserid: payload.sender.id } })
       : await db.team.findFirst({ where: { ghOrgId: payload.organization.id } })
-  if (owner === null) return
+  if (owner === null) childLogger.error('owner is null')
 
   const project = await db.project.findFirst({
-    where: { GhRepo: { id: payload.repository.id } },
-    include: { GhRepo: { select: { ownerTeam: true, owner: true, ghrepoid: true } } },
+    where: { GhRepo: { ghid: payload.repository.id } },
+    include: { GhRepo: { select: { ownerTeam: true, owner: true, ghid: true, name: true } } },
   })
-  if (project === null) return
-  if (project.GhRepo === null) return
+  if (project === null) {
+    childLogger.error('Owner is null')
+    return
+  }
+  if (owner === null) {
+    childLogger.error('Owner is null')
+    return
+  }
+  if (project.GhRepo === null) {
+    childLogger.error('Ghrepo is')
+    return
+  }
 
   const dplymntName = payload.after
-  const ref = payload.ref
-  const isProduction = ref.substring(ref.lastIndexOf('/') + 1) === project.mainBranch
   const deploymentData = await db.deployment.create({
     data: {
       name: dplymntName,
       projectId: project.id,
-      production: isProduction,
+      type: 'STAGING',
       sha: payload.after,
-      domain: `https://${dplymntName}.${owner.name}.dply.app`,
+      status: 'IN_PROGRESS',
+      domain: `${project.name}-${payload.after.slice(0, 7)}.${owner.name}.worffl.jcde.xyz`,
     },
   })
-
-  deployNode({ image: 'node:14-alpine', project, deployment: deploymentData, owner: owner })
+  deployNode({ image: 'builder', project, deployment: deploymentData, owner: owner })
+    .catch((err) => childLogger.error(err))
+    .then((message) => childLogger.info(message))
 }

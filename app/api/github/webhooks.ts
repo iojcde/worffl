@@ -1,17 +1,14 @@
 import { App, createNodeMiddleware } from '@octokit/app'
-import { installationHandler, pushHandler } from 'app/lib/handlers'
+import { installationHandler, pushHandler, repoCreatedHandler } from 'app/lib/handlers'
 
 import fs from 'fs'
-
+console.log(process.env.NODE_ENV)
 export const config = {
   clientID: process.env.GITHUB_CLIENT_ID as string,
   clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
   webhookSecret: process.env.GITHUB_WEBHOOK_SECRET as string,
   appId: parseInt(process.env.GITHUB_APP_ID as string) as number,
-  privateKey:
-    process.env.NODE_ENV === 'development'
-      ? (fs.readFileSync('/home/jcde/sirius/dply-app-dev.pem', 'utf-8') as string)
-      : (process.env.GITHUB_PRIVATE_KEY as string),
+  privateKey: fs.readFileSync('/usr/src/app/worffl.pem', 'utf8') as string,
 }
 
 const app = new App({
@@ -32,6 +29,10 @@ app.webhooks.on('installation.created', async ({ ...args }) => {
 
 app.webhooks.on('push', async ({ ...args }) => {
   pushHandler({ ...args })
+})
+
+app.webhooks.on('repository.created', async ({ ...args }) => {
+  repoCreatedHandler({ ...args })
 })
 
 export default createNodeMiddleware(app)

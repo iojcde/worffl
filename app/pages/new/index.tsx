@@ -1,26 +1,21 @@
 import { BlitzPage, dynamic } from 'blitz'
-import { Card } from '@geist-ui/react'
-
 import Layout from 'app/core/layouts/Layout'
-import { Text, Loading } from '@geist-ui/react'
 import { Suspense } from 'react'
 const GitImportCard = dynamic(import('app/projects/components/GitImportCard'))
 
 const NewProjectPage: BlitzPage = () => {
   return (
-    <>
-      <Text h2 className="text-4xl ">
-        Create New Project
-      </Text>
-      <div className=" shadow-xl mb-20 transition ">
-        <Card style={{ height: '530px' }}>
-          <h4>Import Git repository</h4>
-          <Suspense fallback={<Loading />}>
-            <GitImportCard />
-          </Suspense>
-        </Card>
-      </div>
-    </>
+    <div
+      className="rounded-md md:border  md:p-8 filter md:drop-shadow-xl bg-white"
+      style={{ height: 600 }}
+    >
+      <h2 className="text-4xl font-semibold ">Create New Project</h2>
+
+      <p className="text-2xl pt-2">Import Git repository</p>
+      <Suspense fallback={'hi'}>
+        <GitImportCard />
+      </Suspense>
+    </div>
   )
 }
 
