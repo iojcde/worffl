@@ -67,7 +67,7 @@ const DashboardContent: BlitzPage = () => {
   return (
     <div className="content">
       <div className="flex items-center gap-2 ">
-        <div className="justify-between flex items-center flex-wrap w-full gap-4">
+        <div className="justify-between flex items-center w-full flex-wrap w-full gap-4">
           <Suspense fallback={<></>}>
             <div className="flex items-center gap-2">
               <ProfilePicture />

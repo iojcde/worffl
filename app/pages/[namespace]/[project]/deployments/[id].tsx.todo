@@ -5,8 +5,9 @@ const DeploymentPage: BlitzPage = () => {
   const id = useParam('number')
   return (
     <Suspense fallback="Loading...">
-      <Data id={id} />
+      <Data />
     </Suspense>
   )
 }
 const Data = (id: number) => { }
+export default DeploymentPage
