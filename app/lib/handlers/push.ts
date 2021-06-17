@@ -2,7 +2,7 @@ import db from 'db'
 import deployNode from 'app/lib/deploy/frameworks/node'
 import { PushHandlerArgsType } from 'app/lib/handlers/types'
 import logger from 'logs'
-
+import crypto from 'crypto'
 const childLogger = logger.child({ service: 'pushHandler' })
 export const pushHandler = async ({ octokit, payload }: PushHandlerArgsType): Promise<void> => {
   childLogger.info('Handling "push" event')
@@ -11,11 +11,15 @@ export const pushHandler = async ({ octokit, payload }: PushHandlerArgsType): Pr
     payload.organization === undefined
       ? await db.user.findFirst({ where: { ghuserid: payload.sender.id } })
       : await db.team.findFirst({ where: { ghOrgId: payload.organization.id } })
+
   if (owner === null) childLogger.error('owner is null')
 
   const project = await db.project.findFirst({
     where: { GhRepo: { ghid: payload.repository.id } },
-    include: { GhRepo: { select: { ownerTeam: true, owner: true, ghid: true, name: true } } },
+    include: {
+      Deployments: true,
+      GhRepo: { select: { ownerTeam: true, owner: true, ghid: true, name: true } },
+    },
   })
   if (project === null) {
     childLogger.error('Owner is null')
@@ -26,20 +30,34 @@ export const pushHandler = async ({ octokit, payload }: PushHandlerArgsType): Pr
     return
   }
   if (project.GhRepo === null) {
-    childLogger.error('Ghrepo is')
+    childLogger.error('Ghrepo is null')
     return
   }
+  const type = project.Deployments.length === 0 ? 'PRODUCTION' : 'PREVIEW'
 
-  const dplymntName = payload.after
-  const deploymentData = await db.deployment.create({
+  const tmpDeployment = await db.deployment.create({
     data: {
-      name: dplymntName,
       projectId: project.id,
-      type: 'STAGING',
+      type: type,
       sha: payload.after,
       status: 'IN_PROGRESS',
-      domain: `${project.name}-${payload.after.slice(0, 7)}.${owner.name}.worffl.jcde.xyz`,
+      domain: 'willBeEdited',
     },
+  })
+  const _domainHash = crypto.createHash('sha1')
+  const data = _domainHash.update(tmpDeployment.id + payload.after)
+
+  const domainHash = data.digest('hex').slice(0, 7)
+
+  const deploymentData = await db.deployment.update({
+    data: {
+      projectId: project.id,
+      type: type,
+      sha: payload.after,
+      status: 'IN_PROGRESS',
+      domain: `${project.name}-${domainHash}-${owner.name}.worffl.jcde.xyz`,
+    },
+    where: { id: tmpDeployment.id },
   })
   deployNode({ image: 'builder', project, deployment: deploymentData, owner: owner })
     .catch((err) => childLogger.error(err))

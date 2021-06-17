@@ -3,6 +3,7 @@ import { installationHandler, pushHandler, repoCreatedHandler } from 'app/lib/ha
 
 import fs from 'fs'
 console.log(process.env.NODE_ENV)
+
 export const config = {
   clientID: process.env.GITHUB_CLIENT_ID as string,
   clientSecret: process.env.GITHUB_CLIENT_SECRET as string,

@@ -35,7 +35,7 @@ const GitImportCard: React.FC = () => {
   }, [setInputText])
 
   return (
-    <div className="p-4 mt-2 rounded-md border" style={{ height: 445 }}>
+    <div className="p-4 mt-2 rounded-md border border-black" style={{ height: 445 }}>
       <div className="flex flex-row gap-3">
         <ConnectSelector />
         <input

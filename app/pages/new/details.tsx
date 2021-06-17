@@ -21,7 +21,7 @@ const EditNewProjectPage: BlitzPage<{
       ownerType: 'USER',
       name: values.name,
       ghRepoId: data.id,
-      domains: 'helo.worffl.jcde.xyz',
+      domains: '',
       mainBranch: data.defaultBranch,
       commands: {
         installCmd: values.installCmd,

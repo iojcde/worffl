@@ -10,10 +10,12 @@ services:
       - deploy
 
   app:
+    restart: 'always'
     image: worffl
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./logs:/usr/src/app/logs
+      - worffl_certs:/etc/certs
     ports:
       - 3000:3000
     networks:
@@ -26,3 +28,6 @@ networks:
   node:
     external:
       name: node
+
+volumes:
+  worffl_certs:

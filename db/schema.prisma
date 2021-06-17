@@ -97,28 +97,28 @@ enum Status {
 }
 
 model Deployment {
-  id        Int            @id @default(autoincrement())
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
-  name      String
-  type      DeploymentType
-  logs      LogLine[]
-  domain    String
-  sha       String
-  status    Status
-  project   Project        @relation(fields: [projectId], references: [id])
-  projectId Int
+  id           Int            @id @default(autoincrement())
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  type         DeploymentType
+  logs         LogLine[]
+  domain       String
+  sha          String
+  status       Status
+  containerUrl String?        @unique
+  project      Project        @relation(fields: [projectId], references: [id])
+  projectId    Int
 }
 
 enum DeploymentType {
   PRODUCTION
-  STAGING
+  PREVIEW
 }
 
 model LogLine {
   id           Int         @id @default(autoincrement())
   createdAt    DateTime    @default(now())
-  content      String
+  content      Bytes
   Deployment   Deployment? @relation(fields: [deploymentId], references: [id])
   deploymentId Int?
 }

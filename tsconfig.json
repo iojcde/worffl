@@ -19,5 +19,11 @@
     "tsBuildInfoFile": ".tsbuildinfo"
   },
   "exclude": ["node_modules", "**/*.e2e.ts", "cypress"],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "app/api/auth/[...auth].ts.bk"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "app/api/auth/[...auth].ts.bk",
+    "app/pages/[namespace]/[project]/deployments/[id].tsx.todo"
+  ]
 }

@@ -5,7 +5,7 @@ import logger from 'logs'
 import { config } from 'app/api/github/webhooks'
 import Docker from 'dockerode'
 import { Image } from 'types'
-
+import { Octokit } from '@octokit/core'
 const client = redis.createClient({ url: 'redis://redis' })
 
 const docker = new Docker({ socketPath: '/var/run/docker.sock' })
@@ -33,13 +33,12 @@ const runExec = ({ container, cmd, workdir, dpId }: runExecProps): Promise<strin
         if (err) return
 
         stream?.on('data', async (chunk) => {
-          console.log(chunk.toString())
-          /*   await db.logLine.create({
+          await db.logLine.create({
             data: {
-              content: chunk.toString(),
+              content: chunk,
               deploymentId: dpId,
             },
-          }) */
+          })
         })
         setInterval(() => {
           exec.inspect((err, data) => {
@@ -84,19 +83,31 @@ const deployNode = async (args: deployNodeArgs): Promise<string> => {
     clientId: config.clientID,
     clientSecret: config.clientSecret,
   })
-
+  const appOctokit = new Octokit({
+    authStrategy: createAppAuth,
+    auth: {
+      appId: config.appId,
+      installationId:
+        args.project.ownerType === 'TEAM'
+          ? (args.project.GhRepo?.ownerTeam?.installationId as number)
+          : (args.project.GhRepo?.owner?.installationId as number),
+      privateKey: config.privateKey,
+      clientId: config.clientID,
+      clientSecret: config.clientSecret,
+    },
+  })
   const installationAuthentication = await auth({ type: 'installation' })
   const repo = `https://x-access-token:${installationAuthentication['token']}@github.com/${args.project.GhRepo.name}`
 
   const dpId = args.deployment.id
-  console.log(3)
+
   return new Promise<string>((resolve, reject) => {
     docker.createContainer(
       {
         Image: args.image,
         Tty: true,
         Cmd: ['/bin/sh'],
-        name: `${args.project.name}_${args.deployment.name}_${args.deployment.id}`,
+        name: `${args.project.name}_${args.deployment.id}`,
         Env: env,
         HostConfig: { AutoRemove: true, NetworkMode: 'node' },
       },
@@ -106,6 +117,11 @@ const deployNode = async (args: deployNodeArgs): Promise<string> => {
         if (commands === null) reject('Commands is null. Please check your deploy configs.')
         console.log(commands)
         return container?.start({}, async () => {
+          await appOctokit.request('POST /repos/' + args.project.GhRepo?.name + '/check-runs', {
+            name: 'Deployment to Worffl',
+            head_sha: args.deployment.sha,
+            status: 'in_progress',
+          })
           await runExec({
             container,
             cmd: 'git clone ' + repo + ' ./',
@@ -125,15 +141,28 @@ const deployNode = async (args: deployNodeArgs): Promise<string> => {
             .then((message) => childLogger.info(message))
 
           const deployment = await db.deployment.update({
-            data: { status: 'SUCCESS' },
+            data: {
+              status: 'SUCCESS',
+              containerUrl: 'http://' + container.id.slice(0, 12) + ':3000',
+            },
             where: { id: args.deployment.id },
           })
-          client.set(deployment.domain, 'http://' + container.id.slice(0, 12) + ':3000')
+          client.set(
+            'host:' + deployment.domain.toLowerCase(),
+            'http://' + container.id.slice(0, 12) + ':3000',
+          )
+
+          resolve(`Finished deploying deploying deployment id ${dpId}!`)
+          await appOctokit.request('POST /repos/' + args.project.GhRepo?.name + '/check-runs', {
+            name: 'Deployment to Worffl',
+            head_sha: args.deployment.sha,
+            status: 'completed',
+            conclusion: 'success',
+          })
+
           await runExec({ container, cmd: commands.startCmd, workdir, dpId })
             .catch((err) => reject(err))
             .then((message) => childLogger.info(message))
-
-          resolve(`Finished deploying deploying deployment id ${dpId}!`)
         })
       },
     )

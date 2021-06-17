@@ -11,7 +11,7 @@ const Home: BlitzPage = () => {
   return (
     <>
       <section className="text-gray-700 body-font">
-        <div className="container mx-auto flex px-5 py-10 md:flex-row flex-col items-center">
+        <div className="max-w-5xl container mx-auto flex px-5 py-10 md:flex-row flex-col items-center">
           <div className="md:max-w-xl lg:w-full md:w-1/2 w-5/6 mb-10 md:mb-0">
             <img
               className="object-cover object-center rounded"

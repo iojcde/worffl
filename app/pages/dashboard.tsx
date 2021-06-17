@@ -1,9 +1,22 @@
-import { BlitzPage, Link, Image, useQuery } from 'blitz'
+import {
+  BlitzPage,
+  Link,
+  Image,
+  useQuery,
+  QueryClient,
+  getQueryKey,
+  dehydrate,
+  GetServerSidePropsContext,
+  invokeWithMiddleware,
+  GetServerSideProps,
+} from 'blitz'
 import Layout from 'app/core/layouts/Layout'
 import React, { Suspense } from 'react'
 import { useCurrentUser } from 'app/core/hooks/useCurrentUser'
 import getProjects from 'app/projects/queries/getProjects'
 import { Project, Team, User } from 'db'
+import getProduction from 'app/projects/queries/getProduction'
+import getCurrentUser from 'app/users/queries/getCurrentUser'
 
 /* const UserSection: React.FC = () => {
   const user = useCurrentUser()
@@ -52,7 +65,7 @@ const ProfilePicture: React.FC<{ className?: string }> = ({ className }) => {
 const DashboardContent: BlitzPage = () => {
   const user = useCurrentUser()
   return (
-    <>
+    <div className="content">
       <div className="flex items-center gap-2 ">
         <div className="justify-between flex items-center flex-wrap w-full gap-4">
           <Suspense fallback={<></>}>
@@ -72,7 +85,7 @@ const DashboardContent: BlitzPage = () => {
           <ProjectList />
         </Suspense>
       </div>
-    </>
+    </div>
   )
 }
 const ProjectList: React.FC = () => {
@@ -83,7 +96,7 @@ const ProjectList: React.FC = () => {
   })
 
   return (
-    <div className="flex flex-row  w-full pt-4">
+    <div className="flex flex-col  w-full pt-4">
       {projectData.count >= 0 &&
         Object.keys(projectData.projects).map((key) => {
           return <ProjectCard prj={projectData.projects[key]} key={key} />
@@ -91,18 +104,21 @@ const ProjectList: React.FC = () => {
     </div>
   )
 }
+
 const ProjectCard: React.FC<{
   prj: Project & { user: User; team: Team }
 }> = ({ prj }) => {
-  /*   const [production] = useQuery(getProduction, { projectId: prj.id })
-   */
+  const [production] = useQuery(getProduction, { projectId: prj.id })
+
   return (
     <div className="p-4 border rounded-md shadow-lg max-w-xl w-full">
       <div className="flex justify-between">
         <Link href={`/${prj.ownerType === 'USER' ? prj.user?.name : prj.team.name}/${prj.name}`}>
           <a className="text-2xl font-semibold">{prj.name}</a>
         </Link>
-        <button className="button nocolor small">Visit</button>
+        <Link href={'https://' + production?.domain}>
+          <a className="button nocolor small">Visit</a>
+        </Link>
       </div>
       {/*  <span>{production?.domain}</span> */}
     </div>
@@ -116,8 +132,20 @@ const Dashboard: BlitzPage = () => {
     </Suspense>
   )
 }
+export const getServerSideProps: GetServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const queryClient = new QueryClient()
 
-Dashboard.suppressFirstRenderFlicker = true
+  const queryKey = getQueryKey(getCurrentUser, null)
+  await queryClient.prefetchQuery(queryKey, () => invokeWithMiddleware(getCurrentUser, null, ctx))
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  }
+}
+
+Dashboard.authenticate = true
 Dashboard.getLayout = (page) => <Layout title="Dashboard">{page}</Layout>
 
 export default Dashboard

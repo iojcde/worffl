@@ -14,7 +14,7 @@ const Layout: React.FC<LayoutProps> = ({ title, children }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Menu />
-      <main className=" transition  main pt-12  mx-auto  max-w-5xl px-6 ">{children}</main>
+      <main className=" transition  main pt-12 w-full">{children}</main>
     </div>
   )
 }

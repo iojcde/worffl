@@ -1,4 +1,4 @@
-import { resolver, NotFoundError } from 'blitz'
+import { resolver } from 'blitz'
 import db from 'db'
 import * as z from 'zod'
 
@@ -16,8 +16,7 @@ export default resolver.pipe(
       where: { projectId: projectId, type: 'PRODUCTION' },
     })
 
-    if (!deployment)
-      throw new NotFoundError('There are currently no production deployments for this project.')
+    if (!deployment) return null
 
     return deployment
   },

@@ -1,0 +1,12 @@
+import { BlitzPage, useParam } from 'blitz'
+import { Suspense } from 'react'
+
+const DeploymentPage: BlitzPage = () => {
+  const id = useParam('number')
+  return (
+    <Suspense fallback="Loading...">
+      <Data id={id} />
+    </Suspense>
+  )
+}
+const Data = (id: number) => { }

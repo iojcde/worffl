@@ -1,5 +1,5 @@
 {
-  "name": "sirius",
+  "name": "worffl",
   "version": "1.0.0",
   "scripts": {
     "dev": "blitz dev",
@@ -22,7 +22,8 @@
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [
-      "tsc --noEmit"
+      "sh -c tsc --noEmit",
+      "pretty-quick --staged"
     ]
   },
   "dependencies": {
@@ -33,13 +34,14 @@
     "@types/dockerode": "3.2.3",
     "@types/http-proxy": "1.17.6",
     "@types/redis": "2.8.29",
+    "acme-client": "4.1.3",
     "autoprefixer": "10",
     "awesome-debounce-promise": "2.1.0",
     "blitz": "0.36.4",
+    "do-wrapper": "4.5.1",
     "dockerode": "3.3.0",
     "final-form": "4.20.2",
     "http-proxy": "1.18.1",
-    "octokit": "1.0.5",
     "passport-github2": "0.1.12",
     "postcss": "8",
     "prisma": "2.24.1",
